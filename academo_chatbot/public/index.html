@@ -1,0 +1,164 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Academo Agente</title>
+    <style>
+        body {
+    font-family: Arial, sans-serif;
+    background-color: #f0f2f5;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    margin: 0;
+}
+
+#chat-container {
+    width: 500px;
+    height: 700px;
+    border: 1px solid #ffffff;
+    border-radius: 8px;
+    background-color: #ffffff;
+    display: flex;
+    flex-direction: column;
+    box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+}
+
+#chat-window {
+    flex-grow: 1;
+    padding: 20px;
+    overflow-y: auto; /* Adiciona uma barra de rolagem se as mensagens forem muitas */
+    border-bottom: 1px solid #ccc;
+}
+
+.message {
+    margin-bottom: 15px;
+    padding: 10px 15px;
+    border-radius: 18px;
+    max-width: 75%;
+    line-height: 1.4;
+}
+
+.received {
+    background-color: #e9e9eb;
+    align-self: flex-start; /* Mensagens recebidas na esquerda */
+}
+
+.sent {
+    background-color: #0084ff;
+    color: white;
+    align-self: flex-end; /* Mensagens enviadas na direita */
+    margin-left: auto; /* Empurra para a direita */
+}
+
+#input-container {
+    display: flex;
+    padding: 15px;
+}
+
+#message-input {
+    flex-grow: 1;
+    border: 1px solid #ccc;
+    border-radius: 18px;
+    padding: 10px 15px;
+    font-size: 16px;
+}
+
+#send-button {
+    border: none;
+    background-color: #0084ff;
+    color: white;
+    padding: 10px 20px;
+    border-radius: 18px;
+    margin-left: 10px;
+    cursor: pointer;
+    font-size: 16px;
+}
+
+#send-button:hover {
+    background-color: #006bce;
+}
+    </style>
+</head>
+<body>
+    
+    <div id="chat-container">
+        <div id="chat-window">
+            <div class="message received">Olá! Como posso ajudar hoje?</div>
+        </div>
+        <div id="input-container">
+            <input type="text" id="message-input" placeholder="Digite sua mensagem aqui...">
+            <button id="send-button">Enviar</button>
+        </div>
+    </div>
+
+    <script>
+        // 1. Pegar referências dos elementos HTML
+const messageInput = document.getElementById('message-input');
+const sendButton = document.getElementById('send-button');
+const chatWindow = document.getElementById('chat-window');
+
+// 2. Função para adicionar uma mensagem à tela
+function addMessage(text, type) {
+    // Cria um novo elemento <div> para a mensagem
+    const messageElement = document.createElement('div');
+    
+    // Adiciona as classes CSS para o estilo correto ('message' e 'sent' ou 'received')
+    messageElement.classList.add('message', type);
+    
+    // Define o texto da mensagem
+    messageElement.textContent = text;
+    
+    // Adiciona a nova mensagem à janela do chat
+    chatWindow.appendChild(messageElement);
+
+    // Rola a janela para a mensagem mais recente
+    chatWindow.scrollTop = chatWindow.scrollHeight;
+}
+
+// 3. Função para ser executada quando o botão é clicado
+function handleSend() {
+    const text = messageInput.value.trim(); // Pega o texto e remove espaços em branco inúteis
+
+    if (text) { // Só envia se houver algum texto
+        // Adiciona a mensagem do usuário na tela como 'sent' (enviada)
+        addMessage(text, 'sent');
+        
+        // Limpa o campo de texto
+        messageInput.value = '';
+
+        // Envia a mensagem para a API do Gemini
+        fetch('/api/chat', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({ message: text }),
+        })
+        .then(response => response.json())
+        .then(data => {
+            // Adiciona a resposta do Gemini na tela como 'received'
+            addMessage(data.response, 'received');
+        })
+        .catch(error => {
+            console.error('Erro:', error);
+            addMessage('Ocorreu um erro. Tente novamente mais tarde.', 'received');
+        });
+    }
+}
+
+// 4. Adicionar os "escutadores" de eventos
+sendButton.addEventListener('click', handleSend);
+
+// Opcional: Enviar também ao pressionar "Enter"
+messageInput.addEventListener('keypress', function(event) {
+    if (event.key === 'Enter') {
+        handleSend();
+    }
+});
+    </script>
+
+</body>
+</html>
