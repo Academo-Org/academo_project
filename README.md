@@ -4,7 +4,7 @@
 O **Academo** é um sistema acadêmico integrado a uma inteligência artificial.  
 O projeto busca simplificar a gestão de informações acadêmicas e oferecer suporte inteligente para alunos e professores.
 
-----
+---
 
 ## 🛠️ Tech Stack
 
@@ -28,7 +28,7 @@ O projeto busca simplificar a gestão de informações acadêmicas e oferecer su
 - GitHub 
 - XAMPP 
 
-----
+---
 
 ## 📌 Escopo do Projeto
 - Sistema acadêmico para gestão de dados (alunos, aulas, notas etc.).  
