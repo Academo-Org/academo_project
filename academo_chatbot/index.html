@@ -95,141 +95,82 @@
     </div>
 
     <script>
-        // 1. Pegar referências dos elementos HTML
-const messageInput = document.getElementById('message-input');
-const sendButton = document.getElementById('send-button');
-const chatWindow = document.getElementById('chat-window');
+ <script>
+    // 1. Pegar referências dos elementos HTML corretos
+    const messageInput = document.getElementById('message-input');
+    const sendButton = document.getElementById('send-button');
+    const chatWindow = document.getElementById('chat-window');
 
-// 2. Função para adicionar uma mensagem à tela
-function addMessage(text, type) {
-    // Cria um novo elemento <div> para a mensagem
-    const messageElement = document.createElement('div');
-    
-    // Adiciona as classes CSS para o estilo correto ('message' e 'sent' ou 'received')
-    messageElement.classList.add('message', type);
-    
-    // Define o texto da mensagem
-    messageElement.textContent = text;
-    
-    // Adiciona a nova mensagem à janela do chat
-    chatWindow.appendChild(messageElement);
+    // 2. Gerar um ID único para esta sessão de chat
+    const sessionId = `chat_session_${Date.now()}_${Math.random().toString(36).substring(2, 9)}`;
 
-    // Rola a janela para a mensagem mais recente
-    chatWindow.scrollTop = chatWindow.scrollHeight;
-}
+    // 3. Adicionar os "escutadores" de eventos
+    sendButton.addEventListener('click', sendMessage);
+    messageInput.addEventListener('keypress', function(e) {
+        if (e.key === 'Enter') {
+            sendMessage();
+        }
+    });
 
-// 3. Função para ser executada quando o botão é clicado
-function handleSend() {
-    const text = messageInput.value.trim(); // Pega o texto e remove espaços em branco inúteis
+    // 4. Função principal para enviar a mensagem
+    async function sendMessage() {
+        const userMessage = messageInput.value.trim();
+        if (!userMessage) return;
 
-    if (text) { // Só envia se houver algum texto
-        // Adiciona a mensagem do usuário na tela como 'sent' (enviada)
-        addMessage(text, 'sent');
-        
-        // Limpa o campo de texto
+        // Adiciona a mensagem do usuário na tela
+        displayMessage(userMessage, 'sent');
         messageInput.value = '';
 
-        // Envia a mensagem para a API do Gemini
-        fetch('/api/chat', {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-            },
-            body: JSON.stringify({ message: text }),
-        })
-        .then(response => response.json())
-        .then(data => {
-            // Adiciona a resposta do Gemini na tela como 'received'
-            addMessage(data.response, 'received');
-        })
-        .catch(error => {
-            console.error('Erro:', error);
-            addMessage('Ocorreu um erro. Tente novamente mais tarde.', 'received');
-        });
-    }
-}
+        // Mostra um indicador de "Digitando..."
+        displayMessage('Digitando...', 'received', true);
 
-// 4. Adicionar os "escutadores" de eventos
-sendButton.addEventListener('click', handleSend);
+        try {
+            // Envia os dados no formato CORRETO para o backend
+            const response = await fetch('/api/chat', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ 
+                    sessionId: sessionId, 
+                    message: userMessage 
+                }),
+            });
 
-// Opcional: Enviar também ao pressionar "Enter"
-messageInput.addEventListener('keypress', function(event) {
-    if (event.key === 'Enter') {
-        handleSend();
-    }
+            if (!response.ok) {
+                const errorData = await response.json();
+                throw new Error(errorData.error || `Erro de servidor: ${response.status}`);
+            }
 
-const chatbox = document.getElementById('chatbox');
-const userInput = document.getElementById('userInput');
-const sendButton = document.getElementById('sendButton');
+            const data = await response.json();
+            // Atualiza o "Digitando..." 
+            updateLastMessage(data.response);
 
-// GERA UM ID ÚNICO PARA ESTA SESSÃO DE CHAT
-const sessionId = `chat_session_${Date.now()}_${Math.random().toString(36).substring(2, 9)}`;
-
-sendButton.addEventListener('click', sendMessage);
-userInput.addEventListener('keypress', function(e) {
-    if (e.key === 'Enter') {
-        sendMessage();
-    }
-});
-
-async function sendMessage() {
-    const userMessage = userInput.value.trim();
-    if (!userMessage) return;
-
-    displayMessage(userMessage, 'user');
-    userInput.value = '';
-
-    displayMessage('Digitando...', 'model', true);
-
-    try {
-        // ENVIA O ID DA SESSÃO E A NOVA MENSAGEM
-        const response = await fetch('/api/chat', {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ 
-                sessionId: sessionId, 
-                message: userMessage 
-            }),
-        });
-
-        if (!response.ok) {
-            const errorData = await response.json();
-            throw new Error(errorData.error || 'A resposta da rede não foi OK.');
+        } catch (error) {
+            console.error('Erro ao chamar a API:', error);
+            updateLastMessage(`Desculpe, ocorreu um erro. Tente novamente.`, 'received');
         }
-
-        const data = await response.json();
-        const botMessage = data.response;
-
-        updateLastMessage(botMessage);
-
-    } catch (error) {
-        console.error('Erro ao chamar a API:', error);
-        updateLastMessage(`Desculpe, ocorreu um erro: ${error.message}`, 'error');
     }
-}
 
-// Funções para exibir mensagens na tela (mantenha as suas se já funcionam)
-function displayMessage(message, sender, isLoading = false) {
-    const messageElement = document.createElement('div');
-    messageElement.classList.add('message', `${sender}-message`);
-    if (isLoading) {
-        messageElement.id = 'loading-message';
+    // 5. Funções auxiliares para manipular a interface
+    function displayMessage(message, type, isLoading = false) {
+        const messageElement = document.createElement('div');
+        // Usa as classes CSS que você definiu: 'sent' ou 'received'
+        messageElement.classList.add('message', type);
+        if (isLoading) {
+            messageElement.id = 'loading-message';
+        }
+        messageElement.textContent = message;
+        chatWindow.appendChild(messageElement);
+        chatWindow.scrollTop = chatWindow.scrollHeight;
     }
-    messageElement.textContent = message;
-    chatbox.appendChild(messageElement);
-    chatbox.scrollTop = chatbox.scrollHeight;
-}
 
-function updateLastMessage(newMessage, type = 'model') {
-    const loadingElement = document.getElementById('loading-message');
-    if (loadingElement) {
-        loadingElement.textContent = newMessage;
-        loadingElement.id = '';
-        loadingElement.className = `message ${type}-message`;
+    function updateLastMessage(newMessage) {
+        const loadingElement = document.getElementById('loading-message');
+        if (loadingElement) {
+            loadingElement.textContent = newMessage;
+            loadingElement.id = ''; // Remove o ID para não ser selecionado de novo
+        }
     }
-}
-});
-    </script>
+</script>
 
 </body>
 </html>
