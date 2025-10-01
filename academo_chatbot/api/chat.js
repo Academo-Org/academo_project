@@ -19,7 +19,7 @@ module.exports = async (req, res) => {
         const history = await kv.get(sessionId) || [];
         console.log(`LOG 3: Histórico recuperado do KV. Tamanho: ${history.length}`);
 
-        const model = genAI.getGenerativeModel({ model: 'gemini-pro' });
+        const model = genAI.getGenerativeModel({ model: 'gemini-2.5-pro' });
         const chat = model.startChat({ history });
         
         console.log("LOG 4: Enviando nova mensagem para a API Gemini...");
