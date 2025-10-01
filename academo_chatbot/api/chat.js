@@ -35,8 +35,12 @@ module.exports = async (req, res) => {
         ];
 
         await kv.set(sessionId, updatedHistory);
-        console.log(`LOG 6: Histórico atualizado salvo no KV. Novo tamanho: ${updatedHistory.length}`);
+        console.log("LOG 6: Histórico atualizado salvo no KV. Novo tamanho: ${updatedHistory.length}");
 
+        // Verifica o erro que está acontecendo
+        const verificationRead = await kv.get(sessionId);
+        console.log("LOG 6.5: Lendo de volta o que foi salvo. Tamanho recuperado: ${verificationRead ? verificationRead.length : 'null'}");
+        
         res.status(200).json({ response: text });
         console.log("LOG 7: Resposta enviada para o frontend com sucesso.");
 
