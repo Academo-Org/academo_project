@@ -26,7 +26,8 @@ O projeto busca simplificar a gestão de informações acadêmicas e oferecer su
 
 **Ferramentas de Apoio**  
 - GitHub 
-- XAMPP 
+- XAMPP
+- Vercel
 
 ----
 
