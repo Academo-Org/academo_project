@@ -18,7 +18,7 @@ export default async function handler(req, res) {
         const history = await kv.get(sessionId) || [];
         history.push({ role: 'user', parts: [{ text: message }] });
 
-        const model = genAI.getGenerativeModel({ model: 'gemini-1.0-pro' });
+        const model = genAI.getGenerativeModel({ model: 'gemini-2.5-pro' });
         const chat = model.startChat({ history });
         
         const result = await chat.sendMessage(message);
