@@ -33,7 +33,7 @@ module.exports = async (req, res) => {
         ];
         
         // Não precisamos mais do parâmetro 'systemInstruction' aqui
-        const model = genAI.getGenerativeModel({ model: 'gemini-pro' }); // Testando com o gemini-pro primeiro
+        const model = genAI.getGenerativeModel({ model: 'gemini-2.5-pro' }); // Voltamos pro gemini-2.5-pro
         
         const chat = model.startChat({ history: historyForAPI });
         const result = await chat.sendMessage(message);
