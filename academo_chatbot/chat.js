@@ -21,7 +21,7 @@ module.exports = async (req, res) => {
 
         // Aplica a "personalidade" da IA
         const model = genAI.getGenerativeModel({
-            model: 'gemini-1.5-pro', // Mantive o modelo 'gemini-1.5-pro' que você disse que funcionou
+            model: 'gemini-2.5-pro', 
             systemInstruction: systemInstruction
         });
 
@@ -42,3 +42,4 @@ module.exports = async (req, res) => {
         res.status(500).json({ error: 'Falha ao processar a requisição', details: error.message });
     }
 };
+
