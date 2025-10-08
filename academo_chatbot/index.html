@@ -1,0 +1,193 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Academo Agente</title>
+    <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
+    
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f0f2f5;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+        }
+
+        #chat-container {
+            width: 500px;
+            height: 700px;
+            border: 1px solid #ffffff;
+            border-radius: 8px;
+            background-color: #ffffff;
+            display: flex;
+            flex-direction: column;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+        }
+
+        #chat-window {
+            flex-grow: 1;
+            padding: 20px;
+            overflow-y: auto;
+            border-bottom: 1px solid #ccc;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .message {
+            margin-bottom: 15px;
+            padding: 10px 15px;
+            border-radius: 18px;
+            max-width: 75%;
+            line-height: 1.4;
+        }
+
+        .received {
+            background-color: #e9e9eb;
+            align-self: flex-start;
+        }
+
+        .sent {
+            background-color: #0084ff;
+            color: white;
+            align-self: flex-end;
+        }
+        
+        .error {
+            background-color: #ffdddd;
+            color: #d8000c;
+            align-self: flex-start;
+        }
+
+        #input-container {
+            display: flex;
+            padding: 15px;
+        }
+
+        #message-input {
+            flex-grow: 1;
+            border: 1px solid #ccc;
+            border-radius: 18px;
+            padding: 10px 15px;
+            font-size: 16px;
+        }
+
+        #send-button {
+            border: none;
+            background-color: #0084ff;
+            color: white;
+            padding: 10px 20px;
+            border-radius: 18px;
+            margin-left: 10px;
+            cursor: pointer;
+            font-size: 16px;
+        }
+
+        #send-button:hover {
+            background-color: #006bce;
+        }
+    </style>
+</head>
+<body>
+    
+    <div id="chat-container">
+        <div id="chat-window">
+            <div class="message received">Olá! Como posso ajudar hoje?</div>
+        </div>
+        <div id="input-container">
+            <input type="text" id="message-input" placeholder="Digite sua mensagem aqui...">
+            <button id="send-button">Enviar</button>
+        </div>
+    </div>
+
+    <script>
+    // 1. Pegar referências dos elementos HTML
+    const messageInput = document.getElementById('message-input');
+    const sendButton = document.getElementById('send-button');
+    const chatWindow = document.getElementById('chat-window');
+
+    // 2. Gerar um ID único para esta sessão de chat
+    const sessionId = `chat_session_${Date.now()}_${Math.random().toString(36).substring(2, 9)}`;
+
+    // 3. Adicionar os "escutadores" de eventos
+    sendButton.addEventListener('click', sendMessage);
+    messageInput.addEventListener('keypress', function(e) {
+        if (e.key === 'Enter') {
+            sendMessage();
+        }
+    });
+
+    // 4. Função principal para enviar a mensagem
+    async function sendMessage() {
+        const userMessage = messageInput.value.trim();
+        if (!userMessage) return;
+
+        // Adiciona a mensagem do usuário na tela
+        displayMessage(userMessage, 'sent');
+        messageInput.value = '';
+
+        // Mostra um indicador de "Digitando..."
+        displayMessage('Digitando...', 'received', true);
+
+        try {
+            // Envia os dados no formato CORRETO para o backend
+            const response = await fetch('/api/chat', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({
+                    sessionId: sessionId,
+                    message: userMessage
+                }),
+            });
+
+            if (!response.ok) {
+                const errorData = await response.json();
+                throw new Error(errorData.error || `Erro de servidor: ${response.status}`);
+            }
+
+            const data = await response.json();
+            // Atualiza o "Digitando..." com a resposta final da IA
+            updateLastMessage(data.response, 'received');
+
+        } catch (error) {
+            console.error('Erro ao chamar a API:', error);
+            updateLastMessage(`Desculpe, ocorreu um erro. Tente novamente.`, 'error');
+        }
+    }
+
+    // 5. Funções auxiliares para manipular a interface (VERSÃO CORRIGIDA E UNIFICADA)
+    function displayMessage(message, type, isLoading = false) {
+        const messageElement = document.createElement('div');
+        messageElement.classList.add('message', type);
+        if (isLoading) {
+            messageElement.id = 'loading-message';
+        }
+
+        // Se a mensagem for do usuário ('sent'), usa textContent por segurança para evitar injeção de HTML.
+        // Se for da IA ('received' ou 'error'), traduz de Markdown para HTML.
+        if (type === 'sent') {
+            messageElement.textContent = message;
+        } else {
+            messageElement.innerHTML = marked.parse(message);
+        }
+    
+        chatWindow.appendChild(messageElement);
+        chatWindow.scrollTop = chatWindow.scrollHeight;
+    }
+
+    function updateLastMessage(newMessage, type) {
+        const loadingElement = document.getElementById('loading-message');
+        if (loadingElement) {
+            loadingElement.id = ''; 
+            loadingElement.className = `message ${type}`; // Usa o 'type' para definir a classe final (received ou error)
+            
+            // A resposta final (ou erro) também é traduzida de Markdown para HTML.
+            loadingElement.innerHTML = marked.parse(newMessage);
+        }
+    }
+    </script>
+</body>
+</html>
