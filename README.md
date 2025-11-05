@@ -45,24 +45,6 @@ O sistema possui painéis de controle modulares e seguros, com funcionalidades e
 
 ---
 
-## 📸 Telas do Sistema
-
-> Substitua os placeholders abaixo por imagens reais do seu projeto. Elas são essenciais para demonstrar valor visualmente!
-
-- **Login (com Modo Escuro)**  
-  [COLOQUE UM GIF OU PRINT DA TELA DE LOGIN AQUI]
-
-- **Painel do Aluno**  
-  [COLOQUE UM PRINT DO PAINEL DO ALUNO AQUI]
-
-- **Painel do Professor (Marcar Presença)**  
-  [COLOQUE UM PRINT DA TELA DE PRESENÇA AQUI]
-
-- **Painel da Coordenação (Gerenciar Usuários)**  
-  [COLOQUE UM PRINT DA TELA DE GERENCIAMENTO AQUI]
-
----
-
 ## 🚀 Fluxo de Uso Básico
 
 Uma visão geral de como o sistema funciona:
@@ -87,14 +69,6 @@ Uma visão geral de como o sistema funciona:
 - **Back-End:** PHP 8  
 - **Banco de Dados:** MySQL (MariaDB)  
 - **Front-End:** HTML5, CSS3, JavaScript (ES6)  
-
----
-
-## 💡 Sugestões de Melhoria
-- Adicionar **prints reais** ou GIFs animados das principais telas.  
-- Inserir **badges** de versão, tecnologia e status no topo do README.  
-- Criar uma **demo hospedada** (via Render, Vercel, ou 000webhost).  
-- Adicionar um **guia de instalação local** para avaliadores técnicos.
 
 ---
 
