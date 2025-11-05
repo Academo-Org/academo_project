@@ -1,0 +1,294 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Academo — Dashboard</title>
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css"
+    />
+
+    <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
+    <link rel="stylesheet" href="chatbot.css">
+
+    <style>
+      /* Seu CSS original da página */
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+        font-family: "Arial", sans-serif;
+      }
+      :root {
+        --teal: #208489;
+        --purple: #6b3df2;
+        --line: #e6e8ec;
+        --soft: #f6f8fb;
+        --ink: #333;
+      }
+      body {
+        display: flex;
+        min-height: 100dvh;
+        color: var(--ink);
+        background: #fff;
+      }
+
+      /* ===== Sidebar ===== */
+      .sidebar {
+        width: 80px;
+        background: var(--teal);
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        gap: 40px;
+        padding: 20px 0;
+        position: fixed;
+        inset: 0 auto 0 0;
+      }
+      .sidebar .profile i {
+        font-size: 50px;
+        color: #cfd8dc;
+      }
+      .sidebar nav {
+        display: flex;
+        flex-direction: column;
+        gap: 30px;
+      }
+      .sidebar nav a {
+        color: #fff;
+        font-size: 28px;
+        text-decoration: none;
+        opacity: 0.95;
+        transition: transform 0.2s, opacity 0.2s;
+      }
+      .sidebar nav a:hover {
+        transform: scale(1.12);
+        opacity: 1;
+      }
+      .sidebar nav a.active {
+        text-shadow: 0 0 12px rgba(255, 255, 255, 0.45);
+      }
+
+      /* ===== Conteúdo ===== */
+      .content {
+        margin-left: 100px;
+        width: calc(100% - 100px);
+        padding: 48px 48px 60px;
+        text-align: center;
+      }
+      .logo img {
+        width: 90px;
+      }
+      .logo h1 {
+        color: #6b3df2;
+        font-size: 34px;
+        margin-top: 8px;
+      }
+      .welcome {
+        font-size: 22px;
+        margin-top: 16px;
+        font-weight: 600;
+      }
+      .descricao {
+        font-size: 17px;
+        margin: 16px auto 36px;
+        max-width: 920px;
+        color: #46515b;
+      }
+
+      /* ===== Carrossel ===== */
+      .carousel {
+        position: relative;
+        max-width: 1100px;
+        margin: 0 auto;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+      }
+      .viewport {
+        overflow: hidden;
+        border-radius: 14px;
+        flex: 1;
+        background: var(--soft);
+        border: 1px solid var(--line);
+        padding: 12px;
+      }
+      .carousel-images {
+        display: flex;
+        gap: 12px;
+        transition: transform 0.45s ease;
+      }
+      .carousel-images img {
+        width: calc((100% - 24px) / 3);
+        height: 200px;
+        object-fit: cover;
+        border-radius: 12px;
+        flex-shrink: 0;
+        background: #eee;
+        display: block;
+      }
+
+      .ctrl {
+        position: absolute;
+        top: 50%;
+        transform: translateY(-50%);
+        width: 44px;
+        height: 44px;
+        border: 0;
+        border-radius: 50%;
+        background: var(--purple);
+        color: #fff;
+        font-size: 20px;
+        cursor: pointer;
+        display: grid;
+        place-items: center;
+        box-shadow: 0 6px 16px rgba(0, 0, 0, 0.18);
+        transition: transform 0.12s, filter 0.2s;
+        z-index: 5;
+      }
+      .ctrl:hover {
+        filter: brightness(1.05);
+      }
+      .ctrl:active {
+        transform: translateY(-50%) scale(0.98);
+      }
+      .prev {
+        left: 12px;
+      }
+      .next {
+        right: 12px;
+      }
+
+      @media (max-width: 1024px) {
+        .content {
+          padding: 40px 28px;
+        }
+        .carousel-images img {
+          width: calc((100% - 12px) / 2);
+          height: 190px;
+        }
+      }
+      @media (max-width: 640px) {
+        .carousel-images img {
+          width: 100%;
+          height: 180px;
+        }
+      }
+    </style>
+  </head>
+
+  <body>
+    <aside class="sidebar">
+      <div class="profile">
+        <i class="fa-solid fa-user"></i>
+      </div>
+      <nav>
+        <a href="indexProfessor.html" title="Início" class="active">
+          <i class="fa-solid fa-house"></i>
+        </a>
+        <a href="chamada.html" title="Chamada">
+          <i class="fa-solid fa-clipboard-check"></i>
+        </a>
+        <a href="disciplinaProfessor.html" title="Notas">
+          <i class="fa-solid fa-pen-to-square"></i>
+        </a>
+      </nav>
+    </aside>
+
+    <main class="content">
+      <div class="logo">
+        <img src="Academo.jpeg" alt="Logo Academo" />
+        <h1>ACADEMO</h1>
+      </div>
+      <p class="welcome">
+        Bem-vindo ao Academo!<br />Seu aliado na organização da vida acadêmica!
+      </p>
+      <p class="descricao">
+        Com o Academo, você tem em um só lugar o controle de notas, faltas e
+        desempenho, além de ferramentas práticas para acompanhar sua evolução
+        nos estudos.
+      </p>
+
+      <section class="carousel" aria-label="Galeria de imagens">
+        <button class="ctrl prev" aria-label="Anterior">
+          <i class="fa-solid fa-chevron-left"></i>
+        </button>
+        <div class="viewport">
+          <div class="carousel-images" id="track">
+            <img src="imagem1.jpeg" alt="Imagem 1" />
+            <img src="imagem2.jpg" alt="Imagem 2" />
+            <img src="imagem3.jpg" alt="Imagem 3" />
+            <img src="imagem4.jpeg" alt="Imagem 4" />
+            <img src="imagem5.jpg" alt="Imagem 5" />
+          </div>
+        </div>
+        <button class="ctrl next" aria-label="Próxima">
+          <i class="fa-solid fa-chevron-right"></i>
+        </button>
+      </section>
+    </main>
+
+    <script>
+      const track = document.getElementById("track");
+      if(track) { // Adicionada verificação para segurança
+        const slides = Array.from(track.children);
+        const prev = document.querySelector(".prev");
+        const next = document.querySelector(".next");
+        let index = 0;
+
+        function visibleCount() {
+          if (!track.parentElement) return 3;
+          const vw = track.parentElement.clientWidth;
+          if (vw < 520) return 1;
+          if (vw < 920) return 2;
+          return 3;
+        }
+        function slideWidth() {
+          if (!slides.length) return 0;
+          const w = slides[0].getBoundingClientRect().width;
+          return w + 12;
+        }
+        function clampIndex() {
+          const vis = visibleCount();
+          const max = Math.max(0, slides.length - vis);
+          if (index < 0) index = 0;
+          if (index > max) index = max;
+        }
+        function update() {
+          if (!track.style) return;
+          clampIndex();
+          track.style.transform = `translateX(-${index * slideWidth()}px)`;
+        }
+
+        next.addEventListener("click", () => {
+          index++;
+          update();
+        });
+        prev.addEventListener("click", () => {
+          index--;
+          update();
+        });
+
+        window.addEventListener("resize", update);
+        window.addEventListener("load", update);
+      }
+    </script>
+
+    <button id="academo-chat-button" class="chat-fab" title="Abrir Chat Academo">
+      <i class="fa-solid fa-comment-dots"></i>
+    </button>
+    <div id="chat-container" class="hidden">
+        <div id="chat-window">
+            <div class="message received">Olá! Sou o Academo. Como posso ajudar...</div>
+        </div>
+        <div id="input-container">
+            <input type="text" id="message-input" placeholder="Digite sua mensagem...">
+            <button id="send-button">Enviar</button>
+        </div>
+    </div>
+
+    <script src="chatbot.js"></script>
+
+  </body>
+</html>

@@ -1,0 +1,263 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+  <head>
+        <link 
+    rel="stylesheet" 
+    href="chatbot.css">
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Academo — Disciplinas</title>
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css"
+    />
+    <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
+        <style>
+      /* ===== Reset ===== */
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+        font-family: "Arial", sans-serif;
+      }
+      :root {
+        --teal: #208489;
+        --purple: #6b3df2;
+        --text: #143b3d;
+        --line: #e6e8ec;
+        --soft: #f7f9fc;
+      }
+      body {
+        display: flex;
+        background: #fff;
+        color: #333;
+      }
+
+      /* ===== Sidebar ===== */
+      .sidebar {
+        width: 80px;
+        background: var(--teal);
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        padding: 20px 0;
+        gap: 40px;
+        position: fixed;
+        top: 0;
+        bottom: 0;
+      }
+      .sidebar .profile i {
+        font-size: 50px;
+        color: #cfd8dc;
+      }
+      .sidebar nav {
+        display: flex;
+        flex-direction: column;
+        gap: 30px;
+      }
+      .sidebar nav a {
+        color: #fff;
+        font-size: 28px;
+        text-decoration: none;
+        opacity: 0.9;
+        transition: transform 0.2s, opacity 0.2s;
+      }
+      .sidebar nav a:hover {
+        transform: scale(1.2);
+        opacity: 1;
+      }
+      .sidebar nav a.active {
+        text-shadow: 0 0 12px rgba(255, 255, 255, 0.45);
+      }
+
+      /* ===== Conteúdo ===== */
+      .content {
+        margin-left: 100px;
+        padding: 40px;
+        width: calc(100% - 100px);
+        min-height: 100vh;
+        background: #fff;
+        position: relative;
+        overflow: hidden;
+      }
+
+      /* ... (Resto do seu CSS da página .decor, .logo, .grid, etc) ... */
+      .decor {
+        position: absolute;
+        right: -20px;
+        top: -20px;
+        pointer-events: none;
+        opacity: 0.6;
+      }
+      .decor svg path {
+        stroke: #8a7de3;
+        stroke-width: 2;
+        fill: none;
+      }
+      .logo {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        text-align: center;
+      }
+      .logo img {
+        width: 80px;
+      }
+      .logo h1 {
+        color: var(--purple);
+        font-size: 28px;
+        margin-top: 6px;
+        letter-spacing: 0.8px;
+      }
+      .page-title {
+        text-align: center;
+        font-size: 56px;
+        color: var(--teal);
+        font-weight: 700;
+        margin: 22px 0 10px;
+        text-decoration: underline;
+        text-underline-offset: 8px;
+      }
+      .grid {
+        margin: 18px auto 10px;
+        max-width: 1060px;
+        display: grid;
+        grid-template-columns: repeat(3, 1fr);
+        gap: 44px 60px;
+      }
+      .card {
+        background: #fff;
+        border: 3px solid #5b47d8;
+        border-radius: 24px;
+        padding: 26px 22px;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        gap: 14px;
+        box-shadow: 0 10px 24px rgba(0, 0, 0, 0.06);
+        transition: transform 0.18s ease, box-shadow 0.18s ease;
+      }
+      .card:hover {
+        transform: translateY(-4px);
+        box-shadow: 0 16px 34px rgba(0, 0, 0, 0.08);
+      }
+      .card img {
+        height: 80px;
+        width: auto;
+        object-fit: contain;
+      }
+      .card a {
+        color: var(--teal);
+        font-weight: 700;
+        font-size: 20px;
+        text-decoration: underline;
+        text-underline-offset: 6px;
+        text-align: center;
+      }
+      @media (max-width: 990px) {
+        .grid {
+          grid-template-columns: repeat(2, 1fr);
+        }
+      }
+      @media (max-width: 640px) {
+        .content {
+          padding: 24px;
+          margin-left: 80px;
+        }
+        .page-title {
+          font-size: 40px;
+        }
+        .grid {
+          grid-template-columns: 1fr;
+          gap: 26px;
+        }
+        .card {
+          border-width: 2px;
+          border-radius: 18px;
+          padding: 20px;
+        }
+      }
+    </style>
+  </head>
+
+  <body>
+    <aside class="sidebar">
+      <div class="profile"><i class="fa-solid fa-user"></i></div>
+      <nav>
+        <a href="index.html" title="Início">
+          <i class="fa-solid fa-house"></i>
+        </a>
+        <a href="disciplinas.html" title="Disciplinas" class="active">
+          <i class="fa-solid fa-book-open"></i>
+        </a>
+      </nav>
+    </aside>
+
+    <main class="content">
+      <div class="decor" aria-hidden="true">
+        <svg viewBox="0 0 260 180" width="260" height="180">
+          <path d="M180 10l40 28v48l-40 28-40-28V38Z" />
+          <path d="M220 90l30 22v37l-30 22-30-22v-37Z" />
+          <path d="M150 100l36 26v44l-36 26-36-26v-44Z" />
+        </svg>
+      </div>
+
+      <div class="logo">
+        <img src="Academo.jpeg" alt="Academo Logo" />
+        <h1>ACADEMO</h1>
+      </div>
+
+      <h2 class="page-title">Disciplinas</h2>
+
+      <section class="grid">
+        <div class="card">
+          <img src="imagens/gestao-projetos.png" alt="Gestão de projetos" />
+          <a href="disciplinaProfessor.html?nome=Gestao%20de%20projetos"
+            >Gestão de projetos</a
+          >
+        </div>
+        <div class="card">
+          <img src="imagens/mineracao-dados-1.png" alt="Mineração de dados" />
+          <a href="disciplinaProfessor.html?nome=Mineracao%20de%20dados"
+            >Mineração de dados</a
+          >
+        </div>
+        <div class="card">
+          <img src="imagens/mineracao-dados-2.png" alt="Mineração de dados 2" />
+          <a href="disciplinaProfessor.html?nome=Mineracao%20de%20dados"
+            >Mineração de dados</a
+          >
+        </div>
+        <div class="card">
+          <img src="imagens/projetos-ageis.png" alt="Projetos ágeis" />
+          <a href="disciplinaProfessor.html?nome=Projetos%20ageis">Projetos ágeis</a>
+        </div>
+        <div class="card">
+          <img src="imagens/logica-programacao.png" alt="Lógica Programação" />
+          <a href="disciplinaProfessor.html?nome=Logica%20Programacao"
+            >Lógica Programação</a
+          >
+        </div>
+        <div class="card">
+          <img src="imagens/matematica.png" alt="Matemática" />
+          <a href="disciplinaProfessor.html?nome=Matematica">Matemática</a>
+        </div>
+      </section>
+    </main>
+    
+    <button id="academo-chat-button" class="chat-fab" title="Abrir Chat Academo">
+      <i class="fa-solid fa-comment-dots"></i>
+    </button>
+    <div id="chat-container" class="hidden">
+        <div id="chat-window">
+            <div class="message received">Olá! Sou o Academo. Como posso ajudar...</div>
+        </div>
+        <div id="input-container">
+            <input type="text" id="message-input" placeholder="Digite sua mensagem...">
+            <button id="send-button">Enviar</button>
+        </div>
+    </div>
+    
+    <script src="chatbot.js"></script>
+  </body>
+</html>

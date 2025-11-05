@@ -1,0 +1,473 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Academo — Dashboard</title>
+    <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css"
+    />
+
+    <style>
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+        font-family: "Arial", sans-serif;
+      }
+      :root {
+        --teal: #208489;
+        --purple: #6b3df2;
+        --line: #e6e8ec;
+        --soft: #f6f8fb;
+        --ink: #333;
+      }
+      body {
+        display: flex;
+        min-height: 100dvh;
+        color: var(--ink);
+        background: #fff;
+      }
+
+      .sidebar {
+        width: 80px;
+        background: var(--teal);
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        gap: 40px;
+        padding: 20px 0;
+        position: fixed;
+        inset: 0 auto 0 0;
+      }
+      .sidebar .profile i {
+        font-size: 50px;
+        color: #cfd8dc;
+      }
+      .sidebar nav {
+        display: flex;
+        flex-direction: column;
+        gap: 30px;
+      }
+      .sidebar nav a {
+        color: #fff;
+        font-size: 28px;
+        text-decoration: none;
+        opacity: 0.95;
+        transition: transform 0.2s, opacity 0.2s;
+      }
+      .sidebar nav a:hover {
+        transform: scale(1.12);
+        opacity: 1;
+      }
+      .sidebar nav a.active {
+        text-shadow: 0 0 12px rgba(255, 255, 255, 0.45);
+      }
+
+      .content {
+        margin-left: 100px;
+        width: calc(100% - 100px);
+        padding: 48px 48px 60px;
+        text-align: center;
+      }
+      .logo img {
+        width: 90px;
+      }
+      .logo h1 {
+        color: #6b3df2;
+        font-size: 34px;
+        margin-top: 8px;
+      }
+      .welcome {
+        font-size: 22px;
+        margin-top: 16px;
+        font-weight: 600;
+      }
+      .descricao {
+        font-size: 17px;
+        margin: 16px auto 36px;
+        max-width: 920px;
+        color: #46515b;
+      }
+
+      /* ===== Carrossel ===== */
+      .carousel {
+        position: relative;
+        max-width: 1100px;
+        margin: 0 auto;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+      }
+      .viewport {
+        overflow: hidden;
+        border-radius: 14px;
+        flex: 1;
+        background: var(--soft);
+        border: 1px solid var(--line);
+        padding: 12px;
+      }
+      .carousel-images {
+        display: flex;
+        gap: 12px;
+        transition: transform 0.45s ease;
+      }
+      .carousel-images img {
+        width: calc((100% - 24px) / 3);
+        height: 200px;
+        object-fit: cover;
+        border-radius: 12px;
+        flex-shrink: 0;
+        background: #eee;
+        display: block;
+      }
+
+      .ctrl {
+        position: absolute;
+        top: 50%;
+        transform: translateY(-50%);
+        width: 44px;
+        height: 44px;
+        border: 0;
+        border-radius: 50%;
+        background: var(--purple);
+        color: #fff;
+        font-size: 20px;
+        cursor: pointer;
+        display: grid;
+        place-items: center;
+        box-shadow: 0 6px 16px rgba(0, 0, 0, 0.18);
+        transition: transform 0.12s, filter 0.2s;
+        z-index: 5;
+      }
+      .ctrl:hover {
+        filter: brightness(1.05);
+      }
+      .ctrl:active {
+        transform: translateY(-50%) scale(0.98);
+      }
+      .prev {
+        left: 12px;
+      }
+      .next {
+        right: 12px;
+      }
+
+      @media (max-width: 1024px) {
+        .content {
+          padding: 40px 28px;
+        }
+        .carousel-images img {
+          width: calc((100% - 12px) / 2);
+          height: 190px;
+        }
+      }
+      @media (max-width: 640px) {
+        .carousel-images img {
+          width: 100%;
+          height: 180px;
+        }
+      }
+      
+      /* =========================== */
+      /* ===== CSS DO CHATBOT ===== */
+      /* =========================== */
+      
+      #academo-chat-button {
+        position: fixed;
+        bottom: 25px;
+        right: 25px;
+        width: 60px;
+        height: 60px;
+        border-radius: 50%;
+        background-color: var(--purple); 
+        color: white;
+        font-size: 24px;
+        border: none;
+        cursor: pointer;
+        box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+        z-index: 999;
+        transition: transform 0.2s;
+      }
+      #academo-chat-button:hover {
+        transform: scale(1.1);
+      }
+      #chat-container {
+        position: fixed;
+        bottom: 100px;
+        right: 25px;
+        width: 450px; 
+        height: 600px;
+        border: 1px solid var(--line);
+        border-radius: 8px;
+        background-color: #ffffff;
+        display: flex;
+        flex-direction: column;
+        box-shadow: 0 6px 16px rgba(0,0,0,0.18);
+        z-index: 1000;
+      }
+
+      .hidden {
+        display: none;
+      }
+      .visible {
+        display: flex;
+      }
+
+      #chat-window {
+        flex-grow: 1;
+        padding: 20px;
+        overflow-y: auto;
+        border-bottom: 1px solid var(--line);
+        display: flex;
+        flex-direction: column;
+      }
+      .message {
+        margin-bottom: 15px;
+        padding: 10px 15px;
+        border-radius: 18px;
+        max-width: 80%;
+        line-height: 1.4;
+      }
+      .received {
+        background-color: var(--soft);
+        align-self: flex-start;
+      }
+      .sent {
+        background-color: var(--purple);
+        color: white;
+        align-self: flex-end;
+      }
+      .error {
+        background-color: #ffdddd;
+        color: #d8000c;
+        align-self: flex-start;
+      }
+      #input-container {
+        display: flex;
+        padding: 15px;
+        border-top: 1px solid var(--line);
+      }
+      #message-input {
+        flex-grow: 1;
+        border: 1px solid var(--line);
+        border-radius: 18px;
+        padding: 10px 15px;
+        font-size: 16px;
+      }
+      #send-button {
+        border: none;
+        background-color: var(--purple);
+        color: white;
+        padding: 10px 20px;
+        border-radius: 18px;
+        margin-left: 10px;
+        cursor: pointer;
+        font-size: 16px;
+      }
+      #send-button:hover {
+        filter: brightness(1.1);
+      }
+    </style>
+  </head>
+  <body>
+    <aside class="sidebar">
+      <div class="profile"><i class="fa-solid fa-user"></i></div>
+      <nav>
+        <a href="disciplinas.html" title="Disciplinas"
+          ><i class="fa-solid fa-book-open"></i
+        ></a>
+      </nav>
+    </aside>
+
+    <main class="content">
+      <div class="logo">
+        <img src="Academo.jpeg" alt="Logo Academo" />
+        <h1>ACADEMO</h1>
+      </div>
+      <p class="welcome">
+        Bem-vindo ao Academo!<br />Seu aliado na organização da vida acadêmica!
+      </p>
+      <p class="descricao">
+        Com o Academo, você tem em um só lugar o controle de notas, faltas e
+        desempenho, além de ferramentas práticas para acompanhar sua evolução
+        nos estudos.
+      </p>
+
+      <section class="carousel" aria-label="Galeria de imagens">
+        <button class="ctrl prev" aria-label="Anterior">
+          <i class="fa-solid fa-chevron-left"></i>
+        </button>
+        <div class="viewport">
+          <div class="carousel-images" id="track">
+            <img src="imagem1.jpeg" alt="Imagem 1" />
+            <img src="imagem2.jpg" alt="Imagem 2" />
+            <img src="imagem3.jpg" alt="Imagem 3" />
+            <img src="imagem4.jpeg" alt="Imagem 4" />
+            <img src="imagem5.jpg" alt="Imagem 5" />
+          </div>
+        </div>
+        <button class="ctrl next" aria-label="Próxima">
+          <i class="fa-solid fa-chevron-right"></i>
+        </button>
+      </section>
+    </main>
+
+    <button id="academo-chat-button" class="chat-fab" title="Abrir Chat Academo">
+      <i class="fa-solid fa-comment-dots"></i>
+    </button>
+    
+    <div id="chat-container" class="hidden">
+        <div id="chat-window">
+            <div class="message received">Olá! Sou o Academo. Como posso ajudar com seus estudos hoje?</div>
+        </div>
+        <div id="input-container">
+            <input type="text" id="message-input" placeholder="Digite sua mensagem...">
+            <button id="send-button">Enviar</button>
+        </div>
+    </div>
+
+    <script>
+      // ===== Carrossel 3-por-vez =====
+      const track = document.getElementById("track");
+      const slides = Array.from(track.children);
+      const prev = document.querySelector(".prev");
+      const next = document.querySelector(".next");
+      let index = 0;
+
+      function visibleCount() {
+        const vw = track.parentElement.clientWidth;
+        if (vw < 520) return 1;
+        if (vw < 920) return 2;
+        return 3;
+      }
+      function slideWidth() {
+        if (!slides.length) return 0;
+        const w = slides[0].getBoundingClientRect().width;
+        return w + 12; // 12px = gap
+      }
+      function clampIndex() {
+        const vis = visibleCount();
+        const max = Math.max(0, slides.length - vis);
+        if (index < 0) index = 0;
+        if (index > max) index = max;
+      }
+      function update() {
+        clampIndex();
+        track.style.transform = `translateX(-${index * slideWidth()}px)`;
+      }
+
+      next.addEventListener("click", () => {
+        index++;
+        update();
+      });
+      prev.addEventListener("click", () => {
+        index--;
+        update();
+      });
+      
+      window.addEventListener("resize", update);
+      window.addEventListener("load", update); // garante cálculo após imagens
+
+      /* ============================== */
+      /* ===== JAVASCRIPT DO CHAT ===== */
+      /* ============================== */
+
+      // 1. LÓGICA PARA ABRIR/FECHAR O WIDGET
+      const openChatButton = document.getElementById('academo-chat-button');
+      const chatContainer = document.getElementById('chat-container');
+
+      openChatButton.addEventListener('click', () => {
+          chatContainer.classList.toggle('visible');
+          chatContainer.classList.toggle('hidden');
+      });
+
+      // 2. LÓGICA PRINCIPAL DO CHAT
+      const messageInput = document.getElementById('message-input');
+      const sendButton = document.getElementById('send-button');
+      const chatWindow = document.getElementById('chat-window');
+      const sessionId = `chat_session_${Date.now()}_${Math.random().toString(36).substring(2, 9)}`;
+
+      sendButton.addEventListener('click', sendMessage);
+      messageInput.addEventListener('keypress', function(e) {
+          if (e.key === 'Enter') {
+              sendMessage();
+          }
+      });
+
+      async function sendMessage() {
+          const userMessage = messageInput.value.trim();
+          if (!userMessage) return;
+
+          // --- PEGANDO O CONTEXTO ATUAL ---
+          const currentPage = window.location.href; 
+          const userRole = 'aluno'; // Simulando como "aluno"
+          // --- FIM DA MUDANÇA ---
+
+          displayMessage(userMessage, 'sent');
+          messageInput.value = '';
+
+          displayMessage('Digitando...', 'received', true);
+
+          try {
+              const response = await fetch('https://academo-project.vercel.app/api/chat', { 
+                  method: 'POST',
+                  headers: { 'Content-Type': 'application/json' },
+                  body: JSON.stringify({
+                      sessionId: sessionId,
+                      message: userMessage,
+                      // --- ENVIANDO O CONTEXTO QUE A API ESPERA ---
+                      context: {
+                          page: currentPage,
+                          role: userRole 
+                      }
+                  }),
+              }); 
+
+              if (!response.ok) {
+                  const errorData = await response.json();
+                  throw new Error(errorData.error || `Erro de servidor: ${response.status}`);
+              }
+
+              const data = await response.json();
+              updateLastMessage(data.response, 'received');
+
+          } catch (error) {
+              console.error('Erro ao chamar a API:', error);
+              updateLastMessage(`Desculpe, ocorreu um erro. Tente novamente.`, 'error');
+          }
+      }
+
+      // 3. FUNÇÕES AUXILIARES (com Markdown)
+      function displayMessage(message, type, isLoading = false) {
+          const messageElement = document.createElement('div');
+          messageElement.classList.add('message', type);
+          if (isLoading) {
+              messageElement.id = 'loading-message';
+          }
+
+          if (type === 'sent') {
+              messageElement.textContent = message;
+          } else {
+              messageElement.innerHTML = marked.parse(message);
+          }
+      
+          chatWindow.appendChild(messageElement);
+          chatWindow.scrollTop = chatWindow.scrollHeight; 
+      }
+
+      function updateLastMessage(newMessage, type) {
+          const loadingElement = document.getElementById('loading-message');
+          if (loadingElement) {
+              loadingElement.id = ''; 
+              loadingElement.className = `message ${type}`;
+              
+              loadingElement.innerHTML = marked.parse(newMessage);
+          }
+      }
+
+    </script>
+  </body>
+</html>

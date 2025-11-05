@@ -1,0 +1,369 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Academo — Notas e Frequência (Professor)</title>
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css"
+    />
+
+    <style>
+      /* ===== Reset ===== */
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+        font-family: "Arial", sans-serif;
+      }
+      :root {
+        --teal: #208489;
+        --purple: #6b3df2;
+        --ink: #143b3d;
+        --line: #e6e8ec;
+        --soft: #f7f9fc;
+      }
+      body {
+        display: flex;
+        background: #fff;
+        color: #333;
+        min-height: 100dvh;
+      }
+
+      /* ===== Sidebar (igual ao index professor) ===== */
+      .sidebar {
+        width: 80px;
+        background: var(--teal);
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        gap: 40px;
+        padding: 20px 0;
+        position: fixed;
+        inset: 0 auto 0 0;
+      }
+      .sidebar .profile i {
+        font-size: 50px;
+        color: #cfd8dc;
+      }
+      .sidebar nav {
+        display: flex;
+        flex-direction: column;
+        gap: 30px;
+      }
+      .sidebar nav a {
+        color: #fff;
+        font-size: 28px;
+        text-decoration: none;
+        opacity: 0.95;
+        transition: transform 0.2s, opacity 0.2s;
+      }
+      .sidebar nav a:hover {
+        transform: scale(1.12);
+        opacity: 1;
+      }
+      .sidebar nav a.active {
+        text-shadow: 0 0 12px rgba(255, 255, 255, 0.45);
+      }
+
+      /* ===== Conteúdo ===== */
+      .content {
+        margin-left: 100px;
+        width: calc(100% - 100px);
+        padding: 38px 38px 80px;
+        text-align: center;
+        position: relative;
+      }
+
+      .page-title {
+        font-size: 56px;
+        color: #207a76;
+        font-weight: 800;
+        margin: 8px 0 22px;
+        text-decoration: underline;
+        text-underline-offset: 10px;
+        letter-spacing: 0.5px;
+      }
+
+      /* ===== Grade dos cartões ===== */
+      .grid {
+        margin: 0 auto;
+        max-width: 1180px;
+        display: grid;
+        grid-template-columns: repeat(3, 1fr);
+        gap: 36px 48px;
+      }
+      .aluno-head {
+        font-weight: 700;
+        color: #207a76;
+        text-decoration: underline;
+        text-underline-offset: 5px;
+        margin: 6px 0 10px;
+        font-size: 22px;
+      }
+      .card {
+        background: #fff;
+        border: 3px solid #5b47d8;
+        border-radius: 24px;
+        padding: 18px 18px 16px;
+        text-align: left;
+        box-shadow: 0 10px 24px rgba(0, 0, 0, 0.06);
+        display: flex;
+        flex-direction: column;
+        gap: 12px;
+        min-height: 240px;
+      }
+
+      .row {
+        display: grid;
+        grid-template-columns: 1.2fr 0.8fr 0.8fr;
+        gap: 10px;
+        align-items: center;
+      }
+      .row label {
+        font-weight: 600;
+      }
+      .row input {
+        height: 40px;
+        border: 1px solid var(--line);
+        border-radius: 10px;
+        padding: 0 10px;
+        font: inherit;
+      }
+      .row input:focus {
+        outline: none;
+        border-color: #208489;
+        box-shadow: 0 0 0 2px rgba(32, 132, 137, 0.25);
+      }
+
+      .media {
+        margin-top: 2px;
+        font-size: 22px;
+        font-weight: 700;
+        color: #222;
+      }
+      .freq {
+        margin-top: 4px;
+        font-weight: 700;
+      }
+
+      .actions {
+        display: flex;
+        justify-content: flex-end;
+        gap: 10px;
+        margin: 26px auto 0;
+        max-width: 1180px;
+      }
+      .btn {
+        height: 44px;
+        padding: 0 16px;
+        border-radius: 12px;
+        border: 0;
+        cursor: pointer;
+        font-weight: 700;
+      }
+      .btn.primary {
+        background: #208489;
+        color: #fff;
+      }
+      .btn.ghost {
+        background: #eef2f6;
+      }
+
+      @media (max-width: 1100px) {
+        .grid {
+          grid-template-columns: repeat(2, 1fr);
+        }
+      }
+      @media (max-width: 680px) {
+        .content {
+          padding: 28px 20px 80px;
+          margin-left: 80px;
+        }
+        .page-title {
+          font-size: 40px;
+        }
+        .grid {
+          grid-template-columns: 1fr;
+          gap: 24px;
+        }
+        .row {
+          grid-template-columns: 1fr 1fr 1fr;
+        }
+      }
+    </style>
+  </head>
+
+  <body>
+    <!-- Sidebar (idêntico ao index do professor) -->
+    <aside class="sidebar">
+      <div class="profile"><i class="fa-solid fa-user"></i></div>
+      <nav>
+        <a href="chamada.html" title="Chamada"
+          ><i class="fa-solid fa-clipboard-check"></i
+        ></a>
+        <a href="indexProfessor.html" title="Início"
+          ><i class="fa-solid fa-house"></i
+        ></a>
+      </nav>
+    </aside>
+
+    <!-- Conteúdo -->
+    <main class="content">
+      <h1 class="page-title">Notas e Frequência</h1>
+
+      <form id="notas-form">
+        <section class="grid" id="students"></section>
+
+        <div class="actions">
+          <button type="button" class="btn ghost" id="add-student">
+            + Adicionar aluno
+          </button>
+          <button type="submit" class="btn primary">Salvar (PHP)</button>
+        </div>
+      </form>
+    </main>
+
+    <script>
+      // ===== Dados iniciais (exemplo) =====
+      const alunosIniciais = [
+        { nome: "Aluno 1", frequencia: 90 },
+        { nome: "Aluno 2", frequencia: 100 },
+        { nome: "Aluno 3", frequencia: 75 },
+        { nome: "Aluno 4", frequencia: 88 },
+        { nome: "Aluno 5", frequencia: 95 },
+        { nome: "Aluno 6", frequencia: 60 },
+      ];
+
+      const grid = document.getElementById("students");
+      const addBtn = document.getElementById("add-student");
+      const form = document.getElementById("notas-form");
+
+      function cardTemplate(aluno, idx) {
+        const id = `s${idx}`;
+        return `
+        <div class="wrap">
+          <h3 class="aluno-head">${aluno.nome}</h3>
+          <div class="card" data-aluno="${aluno.nome}">
+            <div class="row">
+              <label for="${id}-n1">Avaliação 01 (Peso):</label>
+              <input id="${id}-n1" type="number" step="0.01" min="0" max="10" placeholder="nota"/>
+              <input id="${id}-p1" type="number" step="0.5" min="0" placeholder="peso"/>
+            </div>
+            <div class="row">
+              <label for="${id}-n2">Avaliação 02 (Peso):</label>
+              <input id="${id}-n2" type="number" step="0.01" min="0" max="10" placeholder="nota"/>
+              <input id="${id}-p2" type="number" step="0.5" min="0" placeholder="peso"/>
+            </div>
+            <div class="row">
+              <label for="${id}-n3">Avaliação 03 (Peso):</label>
+              <input id="${id}-n3" type="number" step="0.01" min="0" max="10" placeholder="nota"/>
+              <input id="${id}-p3" type="number" step="0.5" min="0" placeholder="peso"/>
+            </div>
+
+            <div class="media">Média: <span id="${id}-media">—</span></div>
+            <div class="freq">Frequência: <span id="${id}-freq">${aluno.frequencia}%</span></div>
+          </div>
+        </div>`;
+      }
+
+      function montarCards(lista) {
+        grid.innerHTML = "";
+        lista.forEach((aluno, i) => {
+          grid.insertAdjacentHTML("beforeend", cardTemplate(aluno, i + 1));
+        });
+        ativarCalculo();
+      }
+
+      function calcMedia(n1, p1, n2, p2, n3, p3) {
+        n1 = +n1 || 0;
+        p1 = +p1 || 0;
+        n2 = +n2 || 0;
+        p2 = +p2 || 0;
+        n3 = +n3 || 0;
+        p3 = +p3 || 0;
+        const somaPesos = p1 + p2 + p3;
+        if (somaPesos === 0) return "—";
+        const media = (n1 * p1 + n2 * p2 + n3 * p3) / somaPesos;
+        return media.toFixed(2).replace(".", ",");
+      }
+
+      function ativarCalculo() {
+        grid.querySelectorAll(".card").forEach((card) => {
+          const id = card.querySelector(".media span").id.replace("-media", "");
+          const campos = ["n1", "p1", "n2", "p2", "n3", "p3"].map((s) =>
+            document.getElementById(`${id}-${s}`)
+          );
+          const saida = document.getElementById(`${id}-media`);
+          campos.forEach((c) =>
+            c.addEventListener("input", () => {
+              const [n1, p1, n2, p2, n3, p3] = campos.map((el) => el.value);
+              saida.textContent = calcMedia(n1, p1, n2, p2, n3, p3);
+            })
+          );
+        });
+      }
+
+      addBtn.addEventListener("click", () => {
+        const novo = {
+          nome: `Aluno ${grid.children.length + 1}`,
+          frequencia: 0,
+        };
+        grid.insertAdjacentHTML(
+          "beforeend",
+          cardTemplate(novo, grid.children.length + 1)
+        );
+        ativarCalculo();
+        window.scrollTo({
+          top: document.body.scrollHeight,
+          behavior: "smooth",
+        });
+      });
+
+      form.addEventListener("submit", (e) => {
+        e.preventDefault();
+        const payload = [];
+        grid.querySelectorAll(".card").forEach((card) => {
+          const nome = card.parentElement
+            .querySelector(".aluno-head")
+            .textContent.trim();
+          const idprefix = card
+            .querySelector(".media span")
+            .id.replace("-media", "");
+          const obj = {
+            aluno: nome,
+            notas: [
+              {
+                avaliacao: 1,
+                nota: +document.getElementById(`${idprefix}-n1`).value || 0,
+                peso: +document.getElementById(`${idprefix}-p1`).value || 0,
+              },
+              {
+                avaliacao: 2,
+                nota: +document.getElementById(`${idprefix}-n2`).value || 0,
+                peso: +document.getElementById(`${idprefix}-p2`).value || 0,
+              },
+              {
+                avaliacao: 3,
+                nota: +document.getElementById(`${idprefix}-n3`).value || 0,
+                peso: +document.getElementById(`${idprefix}-p3`).value || 0,
+              },
+            ],
+            frequencia: parseFloat(
+              card.querySelector(".freq span").textContent
+            ),
+          };
+          payload.push(obj);
+        });
+
+        console.log("JSON para enviar:", payload);
+        alert(
+          "Simulação: notas e frequência prontos para enviar ao PHP (veja no console)."
+        );
+      });
+
+      montarCards(alunosIniciais);
+    </script>
+  </body>
+</html>

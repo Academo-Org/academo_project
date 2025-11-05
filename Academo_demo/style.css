@@ -1,0 +1,115 @@
+/* Reset */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  font-family: "Arial", sans-serif;
+}
+
+body {
+  display: flex;
+  background: #fff;
+  color: #333;
+}
+
+/* Sidebar */
+.sidebar {
+  width: 80px;
+  background: #208489;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 20px 0;
+  gap: 40px;
+  position: fixed;
+  top: 0;
+  bottom: 0;
+}
+
+.sidebar .profile i {
+  font-size: 50px;
+  color: #ccc;
+}
+
+.sidebar nav {
+  display: flex;
+  flex-direction: column;
+  gap: 30px;
+}
+
+.sidebar nav a {
+  color: #fff;
+  font-size: 28px;
+  text-decoration: none;
+  transition: transform 0.2s;
+}
+
+.sidebar nav a:hover {
+  transform: scale(1.2);
+}
+
+/* Conteúdo */
+.content {
+  margin-left: 100px;
+  padding: 40px;
+  width: calc(100% - 100px);
+  text-align: center;
+}
+
+.logo img {
+  width: 80px;
+}
+
+.logo h1 {
+  color: #6b3df2;
+  font-size: 28px;
+  margin-top: 5px;
+}
+
+.welcome {
+  font-size: 20px;
+  margin-top: 10px;
+  font-weight: 500;
+}
+
+.descricao {
+  font-size: 16px;
+  margin: 15px auto 30px;
+  max-width: 700px;
+}
+
+/* Carrossel */
+.carousel {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+}
+
+.carousel-images {
+  display: flex;
+  overflow: hidden;
+  width: 80%;
+}
+
+.carousel-images img {
+  min-width: 100%;
+  border-radius: 10px;
+  transition: transform 0.5s ease-in-out;
+}
+
+button.prev,
+button.next {
+  background: #6b3df2;
+  border: none;
+  color: #fff;
+  font-size: 28px;
+  cursor: pointer;
+  padding: 10px;
+  border-radius: 50%;
+  margin: 0 10px;
+}
+
+button:hover {
+  background: #532bd6;
+}
