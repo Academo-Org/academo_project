@@ -1,0 +1,11 @@
+2025-10-07T20:31:08+02:00 - prepare failed: Table 'academo_database.notas' doesn't exist
+2025-10-07T20:31:10+02:00 - prepare presencas failed: Table 'academo_database.presencas' doesn't exist
+2025-10-07T20:31:11+02:00 - prepare materias failed: Table 'academo_database.materias' doesn't exist
+2025-10-07T20:31:13+02:00 - prepare materias failed: Table 'academo_database.materias' doesn't exist
+2025-10-07T20:31:14+02:00 - prepare presencas failed: Table 'academo_database.presencas' doesn't exist
+2025-10-07T20:31:15+02:00 - prepare failed: Table 'academo_database.notas' doesn't exist
+2025-10-07T20:31:32+02:00 - prepare failed: Table 'academo_database.notas' doesn't exist
+2025-10-07T21:47:28+02:00 - prepare failed: Table 'academo_database.notas' doesn't exist
+2025-10-07T21:47:30+02:00 - prepare presencas failed: Table 'academo_database.presencas' doesn't exist
+2025-10-07T21:47:31+02:00 - prepare materias failed: Table 'academo_database.materias' doesn't exist
+2025-10-07T21:48:09+02:00 - prepare failed: Table 'academo_database.notas' doesn't exist
