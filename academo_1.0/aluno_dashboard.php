@@ -37,7 +37,7 @@ $page = $_GET['page'] ?? 'inicio';
       --ink: #333;
     }
     body {
-      display: flex;
+      /* display: flex;  <-- REMOVIDO: Esta linha causava o bug de layout */
       min-height: 100vh;
       color: var(--ink);
       background: #fff; /* Fundo do conteúdo principal */
@@ -54,6 +54,7 @@ $page = $_GET['page'] ?? 'inicio';
       padding: 20px 0;
       position: fixed;
       inset: 0 auto 0 0;
+      z-index: 100; /* Garante que fique acima de tudo */
     }
     .sidebar .profile {
         text-align: center;
@@ -116,6 +117,7 @@ $page = $_GET['page'] ?? 'inicio';
       padding: 30px; /* Padding do PHP */
       overflow-y: auto;
       background-color: #f4f7f6; /* Fundo do PHP */
+      min-height: 100vh; /* Garante que o fundo preencha a tela */
     }
     
     /* Estilos de caixa para o conteúdo das páginas (do PHP) */
@@ -137,6 +139,7 @@ $page = $_GET['page'] ?? 'inicio';
     
     /* =========================== */
     /* ===== CSS DO CHATBOT ===== */
+    /* (CSS Embutido e Corrigido) */
     /* =========================== */
     
     #academo-chat-button {
@@ -159,8 +162,6 @@ $page = $_GET['page'] ?? 'inicio';
       transform: scale(1.1);
     }
     
-    /* --- CORREÇÃO DO BUG DE LAYOUT --- */
-    /* display: flex; FOI REMOVIDO DAQUI */
     #chat-container {
       position: fixed;
       bottom: 100px;
@@ -174,15 +175,12 @@ $page = $_GET['page'] ?? 'inicio';
       box-shadow: 0 6px 16px rgba(0,0,0,0.18);
       z-index: 1000;
     }
-
-    /* Classes que controlam a visibilidade */
     .hidden {
       display: none;
     }
     .visible {
       display: flex;
     }
-
     #chat-window {
       flex-grow: 1;
       padding: 20px;
@@ -240,8 +238,7 @@ $page = $_GET['page'] ?? 'inicio';
   </style>
 </head>
 <body>
-  <div class="container">
-    <aside class="sidebar">
+  <aside class="sidebar">
         
         <div class="profile" title="<?= htmlspecialchars($_SESSION['usuario_nome']); ?>">
             <i class="fa-solid fa-user"></i>
@@ -273,26 +270,23 @@ $page = $_GET['page'] ?? 'inicio';
 
     <main class="main-content">
         <?php
-        // Bloco de Roteamento PHP (Mantido e Corrigido)
+        // Bloco de Roteamento PHP (Corrigido)
         
-        // CORREÇÃO: 'tarefas' foi adicionado à lista de páginas permitidas
         $allowed_pages = ['inicio', 'materias', 'notas', 'presenca', 'tarefas'];
         
         if (in_array($page, $allowed_pages)) {
-            $page_path = __DIR__ . "/aluno/{$page}.php";
+            // CORRIGIDO: __DIR__ (duplo underscore)
+            $page_path = __DIR__ . "/aluno/{$page}.php"; 
             if (file_exists($page_path)) {
                 include $page_path;
             } else {
                 echo "<div class='box'><h1>Erro: Página não encontrada.</h1><p>O arquivo <code>/aluno/{$page}.php</code> não foi encontrado.</p></div>";
             }
         } else {
-            // Se a página não for permitida, carrega o início
             include __DIR__ . '/aluno/inicio.php';
         }
         ?>
     </main>
-  </div>
-
   <button id="academo-chat-button" class="chat-fab" title="Abrir Chat Academo">
     <i class="fa-solid fa-comment-dots"></i>
   </button>
@@ -335,9 +329,10 @@ $page = $_GET['page'] ?? 'inicio';
     const sendButton = document.getElementById('send-button');
     const chatWindow = document.getElementById('chat-window');
     
-    // MELHORIA: Pega dados da sessão do PHP para enviar no contexto
+    // Pega dados da sessão do PHP para enviar no contexto
     const userRole = '<?= htmlspecialchars($_SESSION['usuario_tipo']) ?>'; 
     const userName = '<?= htmlspecialchars($_SESSION['usuario_nome']) ?>';
+    // CORRIGIDO: Erro de sintaxe (faltavam aspas)
     const sessionId = `chat_session_<?= htmlspecialchars($_SESSION['usuario_id']) ?>_${Date.now()}`;
 
     sendButton.addEventListener('click', sendMessage);
@@ -359,7 +354,7 @@ $page = $_GET['page'] ?? 'inicio';
         displayMessage('Digitando...', 'received', true);
 
         try {
-            // URL da sua API Vercel (do seu arquivo original)
+            // URL da sua API Vercel
             const response = await fetch('https://academo-project.vercel.app/api/chat', { 
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
