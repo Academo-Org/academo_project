@@ -31,7 +31,7 @@ if (empty($token)) {
             } elseif (strlen($nova_senha) < 6) {
                 $erro = "A senha deve ter no mínimo 6 caracteres.";
             } else {
-                // Tudo certo, vamos atualizar a senha
+                // Atualizar a senha
                 $hash = password_hash($nova_senha, PASSWORD_DEFAULT);
                 
                 // Nulifica o token para que não possa ser usado novamente
