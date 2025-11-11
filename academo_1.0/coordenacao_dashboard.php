@@ -17,7 +17,6 @@ $page = $_GET['page'] ?? 'inicio';
   <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
 
   <style>
-    /* CSS principal (baseado no professor_dashboard.php) */
     * {
       margin: 0;
       padding: 0;
@@ -102,10 +101,6 @@ $page = $_GET['page'] ?? 'inicio';
     a { text-decoration: none; color: #1d888b; font-weight: bold;}
     input[type=text], input[type=email], input[type=password], input[type=number], select { width: 100%; padding: 8px; box-sizing: border-box; border-radius: 4px; border: 1px solid #ccc;}
 
-    /* =========================== */
-    /* ===== CSS DO CHATBOT ===== */
-    /* (Corrigido e Embutido) */
-    /* =========================== */
     #academo-chat-button {
       position: fixed;
       bottom: 25px;
@@ -260,7 +255,7 @@ $page = $_GET['page'] ?? 'inicio';
   </div>
   
   <script>
-    // --- 1. LÓGICA PARA ABRIR/FECHAR O WIDGET ---
+    // 1. LÓGICA PARA ABRIR/FECHAR O WIDGET 
     const openChatButton = document.getElementById('academo-chat-button');
     const chatContainer = document.getElementById('chat-container');
     const chatIcon = openChatButton.querySelector('i');
@@ -281,7 +276,7 @@ $page = $_GET['page'] ?? 'inicio';
         }
     });
 
-    // --- 2. LÓGICA PRINCIPAL DO CHAT ---
+    // 2. LÓGICA PRINCIPAL DO CHAT 
     const messageInput = document.getElementById('message-input');
     const sendButton = document.getElementById('send-button');
     const chatWindow = document.getElementById('chat-window');
@@ -336,7 +331,7 @@ $page = $_GET['page'] ?? 'inicio';
         }
     }
 
-    // --- 3. FUNÇÕES AUXILIARES (com Markdown) ---
+    // 3. FUNÇÕES AUXILIARES 
     function displayMessage(message, type, isLoading = false) {
         const messageElement = document.createElement('div');
         messageElement.classList.add('message', type);
