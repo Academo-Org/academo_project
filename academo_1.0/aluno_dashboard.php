@@ -1,8 +1,8 @@
 <?php
 session_start();
-// Bloco de autenticação PHP original (Mantido)
+// Bloco de autenticação PHP 
 if (empty($_SESSION['usuario_id']) || $_SESSION['usuario_tipo'] !== 'aluno') {
-    header("Location: index.php"); // index.php é sua página de login
+    header("Location: index.php"); // Página de login
     exit;
 }
 // Pega a página atual
@@ -37,7 +37,7 @@ $page = $_GET['page'] ?? 'inicio';
       --ink: #333;
     }
     body {
-      /* display: flex;  <-- REMOVIDO: Esta linha causava o bug de layout */
+      /* display: flex; */
       min-height: 100vh;
       color: var(--ink);
       background: #fff; /* Fundo do conteúdo principal */
@@ -50,18 +50,18 @@ $page = $_GET['page'] ?? 'inicio';
       display: flex;
       flex-direction: column;
       align-items: center;
-      gap: 30px; /* Reduzido para caber mais links */
+      gap: 30px; 
       padding: 20px 0;
       position: fixed;
       inset: 0 auto 0 0;
-      z-index: 100; /* Garante que fique acima de tudo */
+      z-index: 100; 
     }
     .sidebar .profile {
         text-align: center;
         color: white;
     }
     .sidebar .profile i {
-      font-size: 40px; /* Um pouco menor */
+      font-size: 40px; 
       color: #cfd8dc;
     }
     .sidebar .profile p {
@@ -76,11 +76,11 @@ $page = $_GET['page'] ?? 'inicio';
     .sidebar nav {
       display: flex;
       flex-direction: column;
-      gap: 25px; /* Reduzido */
+      gap: 25px; 
     }
     .sidebar nav a {
       color: #fff;
-      font-size: 26px; /* Um pouco menor */
+      font-size: 26px; 
       text-decoration: none;
       opacity: 0.95;
       transition: transform 0.2s, opacity 0.2s;
@@ -89,13 +89,11 @@ $page = $_GET['page'] ?? 'inicio';
       transform: scale(1.12);
       opacity: 1;
     }
-    /* Estilo dinâmico do PHP para a página ativa */
     .sidebar nav a.active {
       text-shadow: 0 0 12px rgba(255, 255, 255, 0.6);
       transform: scale(1.1);
       opacity: 1;
     }
-    /* Link de Sair (do PHP) */
     .sidebar .logout {
         margin-top: auto;
         color: white;
@@ -109,18 +107,16 @@ $page = $_GET['page'] ?? 'inicio';
         transform: scale(1.1);
     }
 
-
     /* ===== Conteúdo (Design do index.html) ===== */
     .main-content {
-      margin-left: 80px; /* Alinhado com a nova sidebar */
+      margin-left: 80px; 
       width: calc(100% - 80px);
-      padding: 30px; /* Padding do PHP */
+      padding: 30px; 
       overflow-y: auto;
-      background-color: #f4f7f6; /* Fundo do PHP */
-      min-height: 100vh; /* Garante que o fundo preencha a tela */
+      background-color: #f4f7f6; 
+      min-height: 100vh; 
     }
     
-    /* Estilos de caixa para o conteúdo das páginas (do PHP) */
     .box { 
       border: 1px solid #e0e0e0; 
       padding: 25px; 
@@ -136,11 +132,6 @@ $page = $_GET['page'] ?? 'inicio';
       padding-bottom: 10px; 
       margin-top: 0; 
     }
-    
-    /* =========================== */
-    /* ===== CSS DO CHATBOT ===== */
-    /* (CSS Embutido e Corrigido) */
-    /* =========================== */
     
     #academo-chat-button {
       position: fixed;
@@ -270,12 +261,11 @@ $page = $_GET['page'] ?? 'inicio';
 
     <main class="main-content">
         <?php
-        // Bloco de Roteamento PHP (Corrigido)
+        // Bloco de Roteamento PHP 
         
         $allowed_pages = ['inicio', 'materias', 'notas', 'presenca', 'tarefas'];
         
         if (in_array($page, $allowed_pages)) {
-            // CORRIGIDO: __DIR__ (duplo underscore)
             $page_path = __DIR__ . "/aluno/{$page}.php"; 
             if (file_exists($page_path)) {
                 include $page_path;
@@ -302,17 +292,16 @@ $page = $_GET['page'] ?? 'inicio';
   </div>
 
   <script>
-    // --- 1. LÓGICA PARA ABRIR/FECHAR O WIDGET (Botão com 'X') ---
+    // 1. LÓGICA PARA ABRIR/FECHAR O WIDGET 
     const openChatButton = document.getElementById('academo-chat-button');
     const chatContainer = document.getElementById('chat-container');
-    const chatIcon = openChatButton.querySelector('i'); // Pega o ícone
+    const chatIcon = openChatButton.querySelector('i');
 
     openChatButton.addEventListener('click', () => {
         const isHidden = chatContainer.classList.contains('hidden');
         chatContainer.classList.toggle('visible');
         chatContainer.classList.toggle('hidden');
 
-        // Troca o ícone
         if (isHidden) {
             chatIcon.classList.remove('fa-comment-dots');
             chatIcon.classList.add('fa-xmark');
@@ -324,7 +313,7 @@ $page = $_GET['page'] ?? 'inicio';
         }
     });
 
-    // --- 2. LÓGICA PRINCIPAL DO CHAT (com dados do PHP) ---
+    // 2. LÓGICA PRINCIPAL DO CHAT 
     const messageInput = document.getElementById('message-input');
     const sendButton = document.getElementById('send-button');
     const chatWindow = document.getElementById('chat-window');
@@ -332,7 +321,6 @@ $page = $_GET['page'] ?? 'inicio';
     // Pega dados da sessão do PHP para enviar no contexto
     const userRole = '<?= htmlspecialchars($_SESSION['usuario_tipo']) ?>'; 
     const userName = '<?= htmlspecialchars($_SESSION['usuario_nome']) ?>';
-    // CORRIGIDO: Erro de sintaxe (faltavam aspas)
     const sessionId = `chat_session_<?= htmlspecialchars($_SESSION['usuario_id']) ?>_${Date.now()}`;
 
     sendButton.addEventListener('click', sendMessage);
