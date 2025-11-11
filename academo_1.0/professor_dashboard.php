@@ -106,10 +106,6 @@ $page = $_GET['page'] ?? 'inicio';
     button:hover { background-color: #166d6f; }
     .msg-ok { color: green; font-weight: bold; }
 
-    /* =========================== */
-    /* ===== CSS DO CHATBOT ===== */
-    /* (Copiado do aluno_dashboard.php) */
-    /* =========================== */
     #academo-chat-button {
       position: fixed;
       bottom: 25px;
@@ -267,17 +263,16 @@ $page = $_GET['page'] ?? 'inicio';
   </div>
   
   <script>
-    // --- 1. LÓGICA PARA ABRIR/FECHAR O WIDGET (Botão com 'X') ---
+    // 1. LÓGICA PARA ABRIR/FECHAR O WIDGET (Botão com 'X') 
     const openChatButton = document.getElementById('academo-chat-button');
     const chatContainer = document.getElementById('chat-container');
-    const chatIcon = openChatButton.querySelector('i'); // Pega o ícone
+    const chatIcon = openChatButton.querySelector('i'); 
 
     openChatButton.addEventListener('click', () => {
         const isHidden = chatContainer.classList.contains('hidden');
         chatContainer.classList.toggle('visible');
         chatContainer.classList.toggle('hidden');
 
-        // Troca o ícone
         if (isHidden) {
             chatIcon.classList.remove('fa-comment-dots');
             chatIcon.classList.add('fa-xmark');
@@ -289,7 +284,7 @@ $page = $_GET['page'] ?? 'inicio';
         }
     });
 
-    // --- 2. LÓGICA PRINCIPAL DO CHAT (com dados do PHP) ---
+    // 2. LÓGICA PRINCIPAL DO CHAT (com dados do PHP) 
     const messageInput = document.getElementById('message-input');
     const sendButton = document.getElementById('send-button');
     const chatWindow = document.getElementById('chat-window');
@@ -348,7 +343,7 @@ $page = $_GET['page'] ?? 'inicio';
         }
     }
 
-    // --- 3. FUNÇÕES AUXILIARES (com Markdown) ---
+    // 3. FUNÇÕES AUXILIARES 
     function displayMessage(message, type, isLoading = false) {
         const messageElement = document.createElement('div');
         messageElement.classList.add('message', type);
