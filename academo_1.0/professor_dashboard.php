@@ -1,4 +1,5 @@
 <?php
+ob_start();
 session_start();
 if (empty($_SESSION['usuario_id']) || $_SESSION['usuario_tipo'] !== 'professor') {
     header("Location: index.php");
@@ -15,7 +16,7 @@ $page = $_GET['page'] ?? 'inicio';
   
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
   <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
-  
+  <link rel="icon" href="assets/Academo.jpeg" type="image/png">
   <style>
     /* CSS principal (baseado no indexProfessor.html e corrigido) */
     * {
@@ -66,6 +67,8 @@ $page = $_GET['page'] ?? 'inicio';
       text-decoration: none;
       opacity: 0.95;
       transition: transform 0.2s, opacity 0.2s;
+      width: 40px;           
+      text-align: center;    
     }
     .sidebar nav a:hover {
       transform: scale(1.12);

@@ -1,11 +1,11 @@
 <?php
+ob_start(); // Adicionado para previnir erros de "headers already sent"
 session_start();
-// Bloco de autenticação PHP 
+// Bloco de autenticação
 if (empty($_SESSION['usuario_id']) || $_SESSION['usuario_tipo'] !== 'aluno') {
-    header("Location: index.php"); // Página de login
+    header("Location: index.php");
     exit;
 }
-// Pega a página atual
 $page = $_GET['page'] ?? 'inicio';
 ?>
 <!DOCTYPE html>
@@ -20,7 +20,7 @@ $page = $_GET['page'] ?? 'inicio';
     rel="stylesheet"
     href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css"
   />
-
+  <link rel="icon" href="assets/Academo.jpeg" type="image/png">
   <style>
     * {
       margin: 0;
@@ -36,12 +36,13 @@ $page = $_GET['page'] ?? 'inicio';
       --ink: #333;
     }
     body {
+      /* display: flex; <-- CORREÇÃO: Esta linha foi removida para consertar o layout */
       min-height: 100vh;
       color: var(--ink);
-      background: #fff; 
+      background: #fff;
     }
 
-    /* ===== Sidebar (Design do index.html) ===== */
+    /* ===== Sidebar ===== */
     .sidebar {
       width: 80px;
       background: var(--teal);
@@ -52,7 +53,7 @@ $page = $_GET['page'] ?? 'inicio';
       padding: 20px 0;
       position: fixed;
       inset: 0 auto 0 0;
-      z-index: 100; 
+      z-index: 100;
     }
     .sidebar .profile {
         text-align: center;
@@ -82,6 +83,8 @@ $page = $_GET['page'] ?? 'inicio';
       text-decoration: none;
       opacity: 0.95;
       transition: transform 0.2s, opacity 0.2s;
+      width: 40px;           
+      text-align: center;    
     }
     .sidebar nav a:hover {
       transform: scale(1.12);
@@ -105,7 +108,7 @@ $page = $_GET['page'] ?? 'inicio';
         transform: scale(1.1);
     }
 
-    /* ===== Conteúdo (Design do index.html) ===== */
+    /* ===== Conteúdo ===== */
     .main-content {
       margin-left: 80px; 
       width: calc(100% - 80px);
@@ -130,6 +133,11 @@ $page = $_GET['page'] ?? 'inicio';
       padding-bottom: 10px; 
       margin-top: 0; 
     }
+    h2, h3 { color: #166d6f; border-bottom: 1px solid #eee; padding-bottom: 8px;}
+    
+    /* =========================== */
+    /* ===== CSS DO CHATBOT ===== */
+    /* =========================== */
     
     #academo-chat-button {
       position: fixed;
@@ -227,22 +235,18 @@ $page = $_GET['page'] ?? 'inicio';
   </style>
 </head>
 <body>
-  <aside class="sidebar">
+    <aside class="sidebar">
         
-        <div class="profile" title="<?= htmlspecialchars($_SESSION['usuario_nome']); ?>">
+        <div class="profile">
             <i class="fa-solid fa-user"></i>
-            <p><?= htmlspecialchars($_SESSION['usuario_nome']); ?></p>
         </div>
 
         <nav>
             <a href="?page=inicio" title="Início" class="<?= ($page === 'inicio') ? 'active' : '' ?>">
                 <i class="fa-solid fa-house"></i>
             </a>
-            <a href="?page=materias" title="Minhas Matérias" class="<?= ($page === 'materias') ? 'active' : '' ?>">
+            <a href="?page=materias" title="Minhas Matérias & Notas" class="<?= ($page === 'materias' || $page === 'detalhe_materia') ? 'active' : '' ?>">
                 <i class="fa-solid fa-book-open"></i>
-            </a>
-            <a href="?page=notas" title="Minhas Notas" class="<?= ($page === 'notas') ? 'active' : '' ?>">
-                <i class="fa-solid fa-chart-bar"></i>
             </a>
             <a href="?page=presenca" title="Minhas Presenças" class="<?= ($page === 'presenca') ? 'active' : '' ?>">
                 <i class="fa-solid fa-clipboard-check"></i>
@@ -259,11 +263,13 @@ $page = $_GET['page'] ?? 'inicio';
 
     <main class="main-content">
         <?php
-        // Bloco de Roteamento PHP 
+        // Bloco de Roteamento PHP (Corrigido)
         
-        $allowed_pages = ['inicio', 'materias', 'notas', 'presenca', 'tarefas'];
+        // ATUALIZADO: 'notas' removido, 'detalhe_materia' adicionado
+        $allowed_pages = ['inicio', 'materias', 'presenca', 'tarefas', 'detalhe_materia'];
         
         if (in_array($page, $allowed_pages)) {
+            // CORRIGIDO: __DIR__ (duplo underscore)
             $page_path = __DIR__ . "/aluno/{$page}.php"; 
             if (file_exists($page_path)) {
                 include $page_path;
@@ -275,6 +281,7 @@ $page = $_GET['page'] ?? 'inicio';
         }
         ?>
     </main>
+  
   <button id="academo-chat-button" class="chat-fab" title="Abrir Chat Academo">
     <i class="fa-solid fa-comment-dots"></i>
   </button>
@@ -290,28 +297,7 @@ $page = $_GET['page'] ?? 'inicio';
   </div>
 
   <script>
-    // Criando lógica do localstorage
-    function getOrCreateSessionId(userId) {
-        // 1. Tenta pegar o ID guardado no "cofre" do navegador
-        let storedId = localStorage.getItem('academo_session_id');
-        
-        // 2. Define um ID base ligado ao login do PHP
-        let baseId = `chat_session_${userId}`;
-        
-        // 3. Se o ID guardado não existir, ou for de um usuário diferente, cria um novo
-        if (!storedId || !storedId.startsWith(baseId)) {
-            let newId = `${baseId}_${Date.now()}`;
-            localStorage.setItem('academo_session_id', newId);
-            console.log("Nova sessão de chat criada:", newId);
-            return newId;
-        }
-        
-        // 4. Se o ID existe e é do usuário certo, usa ele
-        console.log("Sessão de chat recuperada:", storedId);
-        return storedId;
-    }
-
-    // 1. LÓGICA PARA ABRIR/FECHAR O WIDGET 
+    // --- 1. LÓGICA PARA ABRIR/FECHAR O WIDGET ---
     const openChatButton = document.getElementById('academo-chat-button');
     const chatContainer = document.getElementById('chat-container');
     const chatIcon = openChatButton.querySelector('i');
@@ -332,18 +318,15 @@ $page = $_GET['page'] ?? 'inicio';
         }
     });
 
-    // 2. LÓGICA PRINCIPAL DO CHAT 
+    // --- 2. LÓGICA PRINCIPAL DO CHAT ---
     const messageInput = document.getElementById('message-input');
     const sendButton = document.getElementById('send-button');
     const chatWindow = document.getElementById('chat-window');
     
-    // Pega dados da sessão do PHP
     const userRole = '<?= htmlspecialchars($_SESSION['usuario_tipo']) ?>'; 
     const userName = '<?= htmlspecialchars($_SESSION['usuario_nome']) ?>';
-    const phpSessionId = '<?= htmlspecialchars($_SESSION['usuario_id']) ?>';
-    
-    // Usa função para pegar sessão
-    const sessionId = getOrCreateSessionId(phpSessionId);
+    // CORRIGIDO: Erro de sintaxe (faltavam aspas)
+    const sessionId = `chat_session_<?= htmlspecialchars($_SESSION['usuario_id']) ?>_${Date.now()}`;
 
     sendButton.addEventListener('click', sendMessage);
     messageInput.addEventListener('keypress', function(e) {
@@ -357,10 +340,8 @@ $page = $_GET['page'] ?? 'inicio';
         if (!userMessage) return;
 
         const currentPage = window.location.href; 
-
         displayMessage(userMessage, 'sent');
         messageInput.value = '';
-
         displayMessage('Digitando...', 'received', true);
 
         try {
@@ -392,20 +373,18 @@ $page = $_GET['page'] ?? 'inicio';
         }
     }
 
-    // 3. FUNÇÕES AUXILIARES
+    // --- 3. FUNÇÕES AUXILIARES ---
     function displayMessage(message, type, isLoading = false) {
         const messageElement = document.createElement('div');
         messageElement.classList.add('message', type);
         if (isLoading) {
             messageElement.id = 'loading-message';
         }
-
         if (type === 'sent') {
             messageElement.textContent = message;
         } else {
             messageElement.innerHTML = marked.parse(message); 
         }
-    
         chatWindow.appendChild(messageElement);
         chatWindow.scrollTop = chatWindow.scrollHeight; 
     }

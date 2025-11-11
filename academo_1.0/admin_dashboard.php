@@ -1,4 +1,5 @@
 <?php
+ob_start();
 session_start();
 // Proteção de sessão robusta no arquivo principal
 if (empty($_SESSION['usuario_id']) || $_SESSION['usuario_tipo'] !== 'admin') {
@@ -14,6 +15,7 @@ $page = $_GET['page'] ?? 'inicio';
 <head>
   <meta charset="UTF-8">
   <title>Painel do Administrador — Academo</title>
+  <link rel="icon" href="assets/Academo.jpeg" type="image/png">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <style>
     /* Cole aqui o mesmo CSS que usamos nos outros dashboards para manter a consistência */

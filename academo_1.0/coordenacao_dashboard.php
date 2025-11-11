@@ -1,4 +1,5 @@
 <?php
+ob_start();
 session_start();
 if (empty($_SESSION['usuario_id']) || $_SESSION['usuario_tipo'] !== 'coordenacao') {
     header("Location: index.php");
@@ -15,7 +16,7 @@ $page = $_GET['page'] ?? 'inicio';
 
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
   <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
-
+  <link rel="icon" href="assets/Academo.jpeg" type="image/png">
   <style>
     * {
       margin: 0;
@@ -64,6 +65,8 @@ $page = $_GET['page'] ?? 'inicio';
       text-decoration: none;
       opacity: 0.95;
       transition: transform 0.2s, opacity 0.2s;
+      width: 40px;           
+      text-align: center;    
     }
     .sidebar nav a:hover {
       transform: scale(1.12);
@@ -98,7 +101,7 @@ $page = $_GET['page'] ?? 'inicio';
     td { border-top: 1px solid #e5e5e5; padding: 12px; }
     button { background-color: #1d888b; color: white; padding: 10px 15px; border: none; border-radius: 4px; cursor: pointer; font-size: 16px; margin-top: 10px;}
     button:hover { background-color: #166d6f; }
-    a { text-decoration: none; color: #1d888b; font-weight: bold;}
+    a { text-decoration: none; color: #1d888b; font-weight: bold; }
     input[type=text], input[type=email], input[type=password], input[type=number], select { width: 100%; padding: 8px; box-sizing: border-box; border-radius: 4px; border: 1px solid #ccc;}
 
     #academo-chat-button {

@@ -6,23 +6,18 @@ $professor_id = $_SESSION['usuario_id'];
 $class_id = isset($_GET['class_id']) ? (int)$_GET['class_id'] : 0;
 $msg = '';
 
-// Lógica para salvar a presença
+// --- Lógica PHP (sem alterações) ---
 if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['presencas'])) {
     $class_id_post = (int)$_POST['class_id'];
     $topic = trim($_POST['topic'] ?? 'Aula do dia ' . date('d/m/Y'));
-    
-    // 1. Cria o registro da aula (lesson)
     $lesson_sql = "INSERT INTO lessons (class_id, professor_id, lesson_date, topic) VALUES (?, ?, NOW(), ?)";
     $lesson_stmt = $conn->prepare($lesson_sql);
     $lesson_stmt->bind_param("iis", $class_id_post, $professor_id, $topic);
     $lesson_stmt->execute();
     $lesson_id = $conn->insert_id;
     $lesson_stmt->close();
-
-    // 2. Insere a presença de cada aluno para essa aula
     $attendance_sql = "INSERT INTO attendance (lesson_id, student_id, status, period_number, recorded_by) VALUES (?, ?, ?, ?, ?)";
     $attendance_stmt = $conn->prepare($attendance_sql);
-    
     foreach ($_POST['presencas'] as $student_id => $periods) {
         foreach ($periods as $period_number => $status) {
             $attendance_stmt->bind_param("iisii", $lesson_id, $student_id, $status, $period_number, $professor_id);
@@ -30,23 +25,17 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['presencas'])) {
         }
     }
     $attendance_stmt->close();
-    
-    // CORREÇÃO: Redireciona para o dashboard com os parâmetros corretos
     header("Location: professor_dashboard.php?page=marcar_presenca&success=1");
     exit;
 }
-
 if(isset($_GET['success'])) {
     $msg = "Presenças registradas com sucesso!";
 }
-
-// Busca as turmas do professor
 $classes_stmt = $conn->prepare("SELECT c.id_classes, d.title, c.periods_per_session FROM classes c JOIN disciplines d ON c.discipline_id = d.id_disciplines WHERE c.professor_id = ?");
 $classes_stmt->bind_param("i", $professor_id);
 $classes_stmt->execute();
 $professor_classes = $classes_stmt->get_result()->fetch_all(MYSQLI_ASSOC);
 $classes_stmt->close();
-
 $students = [];
 $current_class = null;
 if ($class_id) {
@@ -56,7 +45,6 @@ if ($class_id) {
             break;
         }
     }
-    
     if ($current_class) {
         $students_sql = "SELECT u.id_users, u.name FROM enrollments e JOIN users u ON e.student_id = u.id_users WHERE e.class_id = ? AND e.status = 'matriculado' ORDER BY u.name";
         $students_stmt = $conn->prepare($students_sql);
@@ -66,15 +54,69 @@ if ($class_id) {
         $students_stmt->close();
     }
 }
+// --- Fim da Lógica PHP ---
 ?>
+
+<style>
+    /* Estilo para a seleção de turma (Passo 1) */
+    .class-selector {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+        gap: 15px;
+    }
+    .class-button {
+        display: block;
+        padding: 20px 15px;
+        background-color: #f9f9f9;
+        border: 1px solid #ddd;
+        border-radius: 8px;
+        text-align: center;
+        font-weight: 600;
+        color: var(--teal);
+        transition: all 0.2s ease;
+        font-size: 1.1em;
+    }
+    .class-button:hover {
+        background-color: #f1f1f1;
+        border-color: #ccc;
+    }
+    .class-button.active {
+        background-color: var(--teal);
+        color: white;
+        border-color: var(--teal);
+        box-shadow: 0 4px 10px rgba(32, 132, 137, 0.3);
+        transform: translateY(-2px);
+    }
+    /* Tabela de presença */
+    .presence-table th, .presence-table td {
+        text-align: center;
+        padding: 8px; /* Mais compacto para a grade */
+    }
+    .presence-table th:first-child, .presence-table td:first-child {
+        text-align: left;
+    }
+    .presence-table select {
+        padding: 6px;
+        font-size: 0.9em;
+    }
+    .topic-input {
+        margin-bottom: 20px;
+    }
+    .topic-input label {
+        display: block;
+        font-weight: 600;
+        margin-bottom: 5px;
+    }
+</style>
+
 <h1>Marcar Presença</h1>
 <?php if ($msg) echo "<p class='msg-ok'>$msg</p>"; ?>
 
 <div class="box">
     <h3>Passo 1: Selecione a Turma para a Aula de Hoje</h3>
-    <div class="link-list">
+    <div class="class-selector">
     <?php foreach ($professor_classes as $class): ?>
-        <a href="?page=marcar_presenca&class_id=<?= $class['id_classes'] ?>" style="<?= $class_id == $class['id_classes'] ? 'background-color: #e0e0e0; padding: 2px 5px; border-radius: 4px;' : '' ?>">
+        <a href="?page=marcar_presenca&class_id=<?= $class['id_classes'] ?>" class="class-button <?= $class_id == $class['id_classes'] ? 'active' : '' ?>">
             <?= htmlspecialchars($class['title']) ?>
         </a>
     <?php endforeach; ?>
@@ -86,11 +128,12 @@ if ($class_id) {
     <h3>Passo 2: Registre as Presenças (Aula de: <?= date('d/m/Y') ?>)</h3>
     <form method="post" action="?page=marcar_presenca">
         <input type="hidden" name="class_id" value="<?= $class_id ?>">
-        <p>
-            <label for="topic">Tópico do encontro de hoje:</label><br>
+        <div class="topic-input">
+            <label for="topic">Tópico do encontro de hoje:</label>
             <input type="text" id="topic" name="topic" placeholder="Ex: Revisão para a Prova" required>
-        </p>
-        <table>
+        </div>
+        
+        <table class="presence-table">
             <thead>
                 <tr>
                     <th>Aluno</th>
