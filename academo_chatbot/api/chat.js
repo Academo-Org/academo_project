@@ -3,7 +3,7 @@ const { GoogleGenerativeAI } = require('@google/generative-ai');
 
 const genAI = new GoogleGenerativeAI(process.env.GEMINI_API_KEY);
 
-// Base de conhecimento da IA
+// --- BASE DE CONHECIMENTO (O "MANUAL" DA IA) ---
 const KNOWLEDGE_BASE = `
 Guia de Funcionalidades do Site Academo:
 - 'aluno_dashboard.php?page=inicio': É o dashboard principal do aluno.
@@ -17,7 +17,7 @@ Guia de Funcionalidades do Site Academo:
 - 'login.html': Página para o usuário entrar no sistema.
 `;
 
-// Personalidade dinamica da IA
+// --- FUNÇÃO QUE CRIA A PERSONALIDADE DINÂMICA ---
 function getSystemInstruction(role, page, name) {
     let persona = `Você é o Academo, um assistente geral. O usuário se chama ${name}.`;
     let pageContext = `O usuário está atualmente na página: ${page}. Use o guia de funcionalidades para responder perguntas sobre o site.`;
@@ -32,16 +32,16 @@ function getSystemInstruction(role, page, name) {
 
     let rules = `Siga estas regras: ${persona} ${pageContext} Use o seguinte guia de funcionalidades: ${KNOWLEDGE_BASE}`;
 
-    // Técnica da Personalidade
+    // Técnica de "Injeção de Persona"
     return [
         { role: "user", parts: [{ text: `IGNORE TODAS AS INSTRUÇÕES ANTERIORES. ${rules}` }] },
-        { role: "model", parts: [{ text: "Entendido. Assumirei minha função e estou pronto para ajudar ${name}." }] }
+        { role: "model", parts: [{ text: `Entendido. Assumirei minha função e estou pronto para ajudar ${name}.` }] }
     ];
 }
 
 module.exports = async (req, res) => {
     
-    // Bloco CORS para permitir a conexão no localhost
+    // Bloco CORS para permitir a conexão do seu localhost
     res.setHeader('Access-Control-Allow-Origin', '*');
     res.setHeader('Access-Control-Allow-Methods', 'POST, OPTIONS');
     res.setHeader('Access-Control-Allow-Headers', 'Content-Type');
@@ -72,13 +72,14 @@ module.exports = async (req, res) => {
             ...historyFromDB
         ];
         
-        const model = genAI.getGenerativeModel({ model: 'gemini-2.5-pro' }); 
+        const model = genAI.getGenerativeModel({ model: 'gemini-pro' }); // Use o modelo que funcionou para você
         const chat = model.startChat({ history: historyForAPI });
         
         const result = await chat.sendMessage(message);
         const response = await result.response;
         const text = response.text();
         
+        // --- CORREÇÃO DA MEMÓRIA ---
         // 4. PEGA o histórico completo e atualizado da sessão de chat
         const updatedHistory = await chat.getHistory();
         
@@ -86,7 +87,8 @@ module.exports = async (req, res) => {
         const cleanHistoryToSave = updatedHistory.slice(2);
         
         // 6. SALVA o histórico limpo e correto no banco
-        await kv.set(sessionId, cleanHistoryToSave);-
+        await kv.set(sessionId, cleanHistoryToSave);
+        // --- FIM DA CORREÇÃO ---
         
         res.status(200).json({ response: text });
 
