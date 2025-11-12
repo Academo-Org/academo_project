@@ -41,7 +41,7 @@ function getSystemInstruction(role, page, name) {
 
 module.exports = async (req, res) => {
     
-    // Bloco CORS para permitir a conexão do seu localhost
+    // Bloco CORS
     res.setHeader('Access-Control-Allow-Origin', '*');
     res.setHeader('Access-Control-Allow-Methods', 'POST, OPTIONS');
     res.setHeader('Access-Control-Allow-Headers', 'Content-Type');
@@ -60,35 +60,36 @@ module.exports = async (req, res) => {
             return res.status(400).json({ error: 'sessionId, message e context são obrigatórios.' });
         }
         
-        // 1. LÊ o histórico limpo do banco
         const historyFromDB = await kv.get(sessionId) || [];
 
-        // 2. GERA a instrução de sistema dinâmica
+        // --- MUDANÇA IMPORTANTE AQUI ---
+        // Se a mensagem for o nosso "comando secreto", só devolve o histórico
+        if (message === "__GET_HISTORY__") {
+            console.log(`(Backend) Histórico recuperado para ${sessionId}, tamanho: ${historyFromDB.length}`);
+            // Retorna o histórico de mensagens
+            res.status(200).json({ history: historyFromDB });
+            return;
+        }
+        // --- FIM DA MUDANÇA ---
+
         const dynamicInstruction = getSystemInstruction(context.role, context.page, context.name);
 
-        // 3. MONTA o histórico para a API (Injeção + Histórico Salvo)
         const historyForAPI = [
             ...dynamicInstruction,
             ...historyFromDB
         ];
         
-        const model = genAI.getGenerativeModel({ model: 'gemini-2.5-pro' }); 
+        const model = genAI.getGenerativeModel({ model: 'gemini-pro' }); // Use o modelo que funcionou para você
         const chat = model.startChat({ history: historyForAPI });
         
         const result = await chat.sendMessage(message);
         const response = await result.response;
         const text = response.text();
         
-        // --- CORREÇÃO DA MEMÓRIA ---
-        // 4. PEGA o histórico completo e atualizado da sessão de chat
         const updatedHistory = await chat.getHistory();
-        
-        // 5. LIMPA o histórico (remove as 2 instruções de persona) antes de salvar
         const cleanHistoryToSave = updatedHistory.slice(2);
         
-        // 6. SALVA o histórico limpo e correto no banco
         await kv.set(sessionId, cleanHistoryToSave);
-        // --- FIM DA CORREÇÃO ---
         
         res.status(200).json({ response: text });
 
