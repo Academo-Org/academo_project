@@ -36,7 +36,7 @@ $page = $_GET['page'] ?? 'inicio';
       --ink: #333;
     }
     body {
-      /* display: flex; <-- CORREÇÃO: Esta linha foi removida para consertar o layout */
+      display: flex; 
       min-height: 100vh;
       color: var(--ink);
       background: #fff;
@@ -135,9 +135,7 @@ $page = $_GET['page'] ?? 'inicio';
     }
     h2, h3 { color: #166d6f; border-bottom: 1px solid #eee; padding-bottom: 8px;}
     
-    /* =========================== */
     /* ===== CSS DO CHATBOT ===== */
-    /* =========================== */
     
     #academo-chat-button {
       position: fixed;
@@ -263,9 +261,7 @@ $page = $_GET['page'] ?? 'inicio';
 
     <main class="main-content">
         <?php
-        // Bloco de Roteamento PHP (Corrigido)
         
-        // ATUALIZADO: 'notas' removido, 'detalhe_materia' adicionado
         $allowed_pages = ['inicio', 'materias', 'presenca', 'tarefas', 'detalhe_materia'];
         
         if (in_array($page, $allowed_pages)) {
@@ -297,7 +293,21 @@ $page = $_GET['page'] ?? 'inicio';
   </div>
 
   <script>
-    // --- 1. LÓGICA PARA ABRIR/FECHAR O WIDGET ---
+    // FUNÇÃO DE LÓGICA DO LOCALSTORAGE 
+    function getOrCreateSessionId(userId) {
+        let storedId = localStorage.getItem('academo_session_id');
+        let baseId = `chat_session_${userId}`;
+        if (!storedId || !storedId.startsWith(baseId)) {
+            let newId = `${baseId}_${Date.now()}`;
+            localStorage.setItem('academo_session_id', newId);
+            console.log("Nova sessão de chat criada:", newId);
+            return newId;
+        }
+        console.log("Sessão de chat recuperada:", storedId);
+        return storedId;
+    }
+
+    // LÓGICA PARA ABRIR/FECHAR O WIDGET
     const openChatButton = document.getElementById('academo-chat-button');
     const chatContainer = document.getElementById('chat-container');
     const chatIcon = openChatButton.querySelector('i');
@@ -306,7 +316,6 @@ $page = $_GET['page'] ?? 'inicio';
         const isHidden = chatContainer.classList.contains('hidden');
         chatContainer.classList.toggle('visible');
         chatContainer.classList.toggle('hidden');
-
         if (isHidden) {
             chatIcon.classList.remove('fa-comment-dots');
             chatIcon.classList.add('fa-xmark');
@@ -318,15 +327,16 @@ $page = $_GET['page'] ?? 'inicio';
         }
     });
 
-    // --- 2. LÓGICA PRINCIPAL DO CHAT ---
+    // LÓGICA PRINCIPAL DO CHAT 
     const messageInput = document.getElementById('message-input');
     const sendButton = document.getElementById('send-button');
     const chatWindow = document.getElementById('chat-window');
     
     const userRole = '<?= htmlspecialchars($_SESSION['usuario_tipo']) ?>'; 
     const userName = '<?= htmlspecialchars($_SESSION['usuario_nome']) ?>';
-    // CORRIGIDO: Erro de sintaxe (faltavam aspas)
-    const sessionId = `chat_session_<?= htmlspecialchars($_SESSION['usuario_id']) ?>_${Date.now()}`;
+    const phpSessionId = '<?= htmlspecialchars($_SESSION['usuario_id']) ?>';
+    
+    const sessionId = getOrCreateSessionId(phpSessionId);
 
     sendButton.addEventListener('click', sendMessage);
     messageInput.addEventListener('keypress', function(e) {
@@ -334,6 +344,45 @@ $page = $_GET['page'] ?? 'inicio';
             sendMessage();
         }
     });
+
+    // Função para carregar histórico
+    async function loadHistory() {
+        console.log("Carregando histórico para:", sessionId);
+        chatWindow.innerHTML = ''; 
+        displayMessage('Carregando histórico...', 'received', true); 
+
+        try {
+            const response = await fetch('https://academo-project.vercel.app/api/chat', { 
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({
+                    sessionId: sessionId,
+                    message: "__GET_HISTORY__", 
+                    context: { page: window.location.href, role: userRole, name: userName }
+                }),
+            });
+
+            if (!response.ok) throw new Error('Falha ao carregar histórico');
+
+            const data = await response.json();
+            
+            const loading = document.getElementById('loading-message');
+            if (loading) loading.remove();
+
+            if (data.history && data.history.length > 0) {
+                data.history.forEach(msg => {
+                    const type = msg.role === 'user' ? 'sent' : 'received';
+                    displayMessage(msg.parts[0].text, type);
+                });
+            } else {
+                displayMessage('Olá! Sou o Academo. Como posso ajudar?', 'received');
+            }
+
+        } catch (error) {
+            console.error('Erro ao carregar histórico:', error);
+            updateLastMessage(`Não consegui carregar seu histórico. Começando uma nova conversa.`, 'error');
+        }
+    }
 
     async function sendMessage() {
         const userMessage = messageInput.value.trim();
@@ -373,7 +422,7 @@ $page = $_GET['page'] ?? 'inicio';
         }
     }
 
-    // --- 3. FUNÇÕES AUXILIARES ---
+    // FUNÇÕES AUXILIARES 
     function displayMessage(message, type, isLoading = false) {
         const messageElement = document.createElement('div');
         messageElement.classList.add('message', type);
@@ -399,6 +448,8 @@ $page = $_GET['page'] ?? 'inicio';
             displayMessage(newMessage, type);
         }
     }
+
+    loadHistory();
   </script>
 
 </body>
