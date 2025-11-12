@@ -83,7 +83,7 @@ module.exports = async (req, res) => {
         ];
         
         // Use o nome do modelo que funcionou para você
-        const model = genAI.getGenerativeModel({ model: 'gemini-1.5-pro' }); 
+        const model = genAI.getGenerativeModel({ model: 'gemini-2.5-pro' }); 
         const chat = model.startChat({ history: historyForAPI });
         
         const result = await chat.sendMessage(message);
