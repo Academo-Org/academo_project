@@ -63,6 +63,16 @@ module.exports = async (req, res) => {
         // 1. LÊ o histórico limpo do banco
         const historyFromDB = await kv.get(sessionId) || [];
 
+        // --- MUDANÇA (CARREGAR HISTÓRICO) ---
+        // Se a mensagem for o "comando secreto", só devolve o histórico
+        if (message === "__GET_HISTORY__") {
+            console.log(`(Backend) Histórico recuperado para ${sessionId}, tamanho: ${historyFromDB.length}`);
+            // Retorna o histórico de mensagens
+            res.status(200).json({ history: historyFromDB });
+            return;
+        }
+        // --- FIM DA MUDANÇA ---
+
         // 2. GERA a instrução de sistema dinâmica
         const dynamicInstruction = getSystemInstruction(context.role, context.page, context.name);
 
@@ -72,14 +82,15 @@ module.exports = async (req, res) => {
             ...historyFromDB
         ];
         
-        const model = genAI.getGenerativeModel({ model: 'gemini-pro' }); // Use o modelo que funcionou para você
+        // Use o nome do modelo que funcionou para você
+        const model = genAI.getGenerativeModel({ model: 'gemini-1.5-pro' }); 
         const chat = model.startChat({ history: historyForAPI });
         
         const result = await chat.sendMessage(message);
         const response = await result.response;
         const text = response.text();
         
-        // --- AQUI ESTÁ A CORREÇÃO DA MEMÓRIA ---
+        // --- CORREÇÃO DA MEMÓRIA ---
         // 4. PEGA o histórico completo e atualizado da sessão de chat
         const updatedHistory = await chat.getHistory();
         
