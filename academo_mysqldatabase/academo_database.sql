@@ -3,9 +3,9 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Tempo de geração: 05/11/2025 às 13:30
+-- Tempo de geração: 19/11/2025 às 13:10
 -- Versão do servidor: 10.4.32-MariaDB
--- Versão do PHP: 8.2.12
+-- Versão do PHP: 8.0.30
 
 SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
 START TRANSACTION;
@@ -35,15 +35,6 @@ CREATE TABLE `assignments` (
   `due_date` datetime DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
---
--- Despejando dados para a tabela `assignments`
---
-
-INSERT INTO `assignments` (`id_assignments`, `class_id`, `title`, `description`, `due_date`) VALUES
-(1, 1, 'Trabalho 1 - Algoritmo de Ordenação', 'Implementar um algoritmo de Bubble Sort em Python.', '2025-09-30 23:59:59'),
-(2, 2, 'Estudo de Caso - Requisitos', 'Analisar o estudo de caso da empresa X e levantar 10 requisitos funcionais.', '2025-10-15 23:59:59'),
-(3, 6, 'Entrega do Sprint 2', 'AAA', '2025-10-31 12:15:00');
-
 -- --------------------------------------------------------
 
 --
@@ -65,63 +56,18 @@ CREATE TABLE `attendance` (
 --
 
 INSERT INTO `attendance` (`id_attendance`, `lesson_id`, `student_id`, `status`, `period_number`, `recorded_by`, `recorded_at`) VALUES
-(1, 1, 4, 'presente', 0, 2, '2025-10-07 19:53:01'),
-(2, 1, 5, 'atrasado', 0, 2, '2025-10-07 19:53:01'),
-(3, 2, 4, 'presente', 0, 2, '2025-10-07 19:53:01'),
-(4, 3, 4, 'justificado', 0, 3, '2025-10-07 19:53:01'),
-(5, 3, 6, 'ausente', 0, 3, '2025-10-07 19:53:01'),
-(6, 6, 7, 'presente', 1, 13, '2025-10-07 20:51:24'),
-(7, 6, 7, 'presente', 2, 13, '2025-10-07 20:51:24'),
-(8, 6, 7, 'presente', 3, 13, '2025-10-07 20:51:24'),
-(9, 6, 7, 'presente', 4, 13, '2025-10-07 20:51:24'),
-(10, 7, 12, 'presente', 1, 13, '2025-10-07 21:25:17'),
-(11, 7, 12, 'presente', 2, 13, '2025-10-07 21:25:17'),
-(12, 7, 12, 'presente', 3, 13, '2025-10-07 21:25:17'),
-(13, 7, 12, 'presente', 4, 13, '2025-10-07 21:25:17'),
-(14, 7, 4, 'presente', 1, 13, '2025-10-07 21:25:17'),
-(15, 7, 4, 'presente', 2, 13, '2025-10-07 21:25:17'),
-(16, 7, 4, 'presente', 3, 13, '2025-10-07 21:25:17'),
-(17, 7, 4, 'presente', 4, 13, '2025-10-07 21:25:17'),
-(18, 7, 7, 'presente', 1, 13, '2025-10-07 21:25:17'),
-(19, 7, 7, 'presente', 2, 13, '2025-10-07 21:25:17'),
-(20, 7, 7, 'presente', 3, 13, '2025-10-07 21:25:17'),
-(21, 7, 7, 'presente', 4, 13, '2025-10-07 21:25:17'),
-(22, 7, 6, 'presente', 1, 13, '2025-10-07 21:25:17'),
-(23, 7, 6, 'presente', 2, 13, '2025-10-07 21:25:17'),
-(24, 7, 6, 'presente', 3, 13, '2025-10-07 21:25:17'),
-(25, 7, 6, 'presente', 4, 13, '2025-10-07 21:25:17'),
-(26, 7, 8, 'presente', 1, 13, '2025-10-07 21:25:17'),
-(27, 7, 8, 'presente', 2, 13, '2025-10-07 21:25:17'),
-(28, 7, 8, 'presente', 3, 13, '2025-10-07 21:25:17'),
-(29, 7, 8, 'presente', 4, 13, '2025-10-07 21:25:17'),
-(30, 7, 5, 'presente', 1, 13, '2025-10-07 21:25:17'),
-(31, 7, 5, 'presente', 2, 13, '2025-10-07 21:25:17'),
-(32, 7, 5, 'presente', 3, 13, '2025-10-07 21:25:17'),
-(33, 7, 5, 'presente', 4, 13, '2025-10-07 21:25:17'),
-(34, 8, 15, 'presente', 1, 13, '2025-10-29 14:09:32'),
-(35, 8, 15, 'presente', 2, 13, '2025-10-29 14:09:32'),
-(36, 8, 15, 'presente', 3, 13, '2025-10-29 14:09:32'),
-(37, 8, 15, 'presente', 4, 13, '2025-10-29 14:09:32'),
-(38, 8, 15, 'presente', 5, 13, '2025-10-29 14:09:32'),
-(39, 8, 15, 'presente', 6, 13, '2025-10-29 14:09:32'),
-(40, 8, 4, 'presente', 1, 13, '2025-10-29 14:09:32'),
-(41, 8, 4, 'presente', 2, 13, '2025-10-29 14:09:32'),
-(42, 8, 4, 'presente', 3, 13, '2025-10-29 14:09:32'),
-(43, 8, 4, 'presente', 4, 13, '2025-10-29 14:09:32'),
-(44, 8, 4, 'presente', 5, 13, '2025-10-29 14:09:32'),
-(45, 8, 4, 'presente', 6, 13, '2025-10-29 14:09:32'),
-(46, 8, 7, 'presente', 1, 13, '2025-10-29 14:09:32'),
-(47, 8, 7, 'presente', 2, 13, '2025-10-29 14:09:32'),
-(48, 8, 7, 'presente', 3, 13, '2025-10-29 14:09:32'),
-(49, 8, 7, 'presente', 4, 13, '2025-10-29 14:09:32'),
-(50, 8, 7, 'presente', 5, 13, '2025-10-29 14:09:32'),
-(51, 8, 7, 'presente', 6, 13, '2025-10-29 14:09:32'),
-(52, 8, 6, 'presente', 1, 13, '2025-10-29 14:09:32'),
-(53, 8, 6, 'presente', 2, 13, '2025-10-29 14:09:32'),
-(54, 8, 6, 'presente', 3, 13, '2025-10-29 14:09:32'),
-(55, 8, 6, 'presente', 4, 13, '2025-10-29 14:09:32'),
-(56, 8, 6, 'presente', 5, 13, '2025-10-29 14:09:32'),
-(57, 8, 6, 'presente', 6, 13, '2025-10-29 14:09:32');
+(58, 9, 24, 'presente', 1, 23, '2025-11-19 12:05:22'),
+(59, 9, 24, 'presente', 2, 23, '2025-11-19 12:05:22'),
+(60, 9, 22, 'presente', 1, 23, '2025-11-19 12:05:22'),
+(61, 9, 22, 'presente', 2, 23, '2025-11-19 12:05:22'),
+(62, 10, 24, 'presente', 1, 23, '2025-11-19 12:05:24'),
+(63, 10, 24, 'presente', 2, 23, '2025-11-19 12:05:24'),
+(64, 10, 24, 'presente', 3, 23, '2025-11-19 12:05:24'),
+(65, 10, 24, 'presente', 4, 23, '2025-11-19 12:05:24'),
+(66, 10, 22, 'presente', 1, 23, '2025-11-19 12:05:24'),
+(67, 10, 22, 'presente', 2, 23, '2025-11-19 12:05:24'),
+(68, 10, 22, 'presente', 3, 23, '2025-11-19 12:05:24'),
+(69, 10, 22, 'presente', 4, 23, '2025-11-19 12:05:24');
 
 -- --------------------------------------------------------
 
@@ -140,14 +86,6 @@ CREATE TABLE `audit_logs` (
   `created_at` timestamp NOT NULL DEFAULT current_timestamp()
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
---
--- Despejando dados para a tabela `audit_logs`
---
-
-INSERT INTO `audit_logs` (`id_audit_logs`, `user_id`, `action`, `table_name`, `row_id`, `old_value`, `new_value`, `created_at`) VALUES
-(1, 1, 'LOGIN_SUCCESS', 'users', 1, NULL, 'User logged in successfully', '2025-10-07 18:50:11'),
-(2, 2, 'UPDATE', 'grades', 1, '8.5', '9.5', '2025-10-07 18:50:11');
-
 -- --------------------------------------------------------
 
 --
@@ -156,6 +94,7 @@ INSERT INTO `audit_logs` (`id_audit_logs`, `user_id`, `action`, `table_name`, `r
 
 CREATE TABLE `classes` (
   `id_classes` int(11) NOT NULL,
+  `owner_id` int(11) DEFAULT NULL,
   `program_id` int(11) DEFAULT NULL,
   `discipline_id` int(11) NOT NULL,
   `semester_id` int(11) NOT NULL,
@@ -171,13 +110,9 @@ CREATE TABLE `classes` (
 -- Despejando dados para a tabela `classes`
 --
 
-INSERT INTO `classes` (`id_classes`, `program_id`, `discipline_id`, `semester_id`, `professor_id`, `section_code`, `capacity`, `periods_per_session`, `status`, `created_at`) VALUES
-(1, 1, 1, 2, 2, 'A', 60, 4, 'aberto', '2025-10-07 18:50:11'),
-(2, 2, 2, 2, 3, 'B', 50, 4, 'aberto', '2025-10-07 18:50:11'),
-(3, 3, 3, 2, 13, 'U', 70, 4, 'aberto', '2025-10-07 18:50:11'),
-(4, NULL, 4, 2, 14, 'C', 60, 2, 'aberto', '2025-10-07 21:26:27'),
-(5, NULL, 5, 1, 13, NULL, 60, 6, 'aberto', '2025-10-08 14:13:42'),
-(6, NULL, 6, 2, 13, NULL, 60, 6, 'aberto', '2025-10-29 14:03:39');
+INSERT INTO `classes` (`id_classes`, `owner_id`, `program_id`, `discipline_id`, `semester_id`, `professor_id`, `section_code`, `capacity`, `periods_per_session`, `status`, `created_at`) VALUES
+(8, 21, NULL, 8, 2, 23, NULL, 60, 2, 'aberto', '2025-11-19 12:03:59'),
+(9, 21, NULL, 9, 2, 23, NULL, 60, 4, 'aberto', '2025-11-19 12:04:37');
 
 -- --------------------------------------------------------
 
@@ -191,15 +126,6 @@ CREATE TABLE `classrooms` (
   `location` varchar(255) DEFAULT NULL,
   `capacity` int(11) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
-
---
--- Despejando dados para a tabela `classrooms`
---
-
-INSERT INTO `classrooms` (`id_classrooms`, `name`, `location`, `capacity`) VALUES
-(1, 'Sala 101', 'Bloco A, 1º Andar', 60),
-(2, 'Laboratório de Redes', 'Bloco B, Térreo', 40),
-(3, 'Auditório Central', 'Prédio Principal', 150);
 
 -- --------------------------------------------------------
 
@@ -221,12 +147,8 @@ CREATE TABLE `disciplines` (
 --
 
 INSERT INTO `disciplines` (`id_disciplines`, `code`, `title`, `program_id`, `credits`, `description`) VALUES
-(1, 'CC101', 'Algoritmos e Estruturas de Dados', 1, 4.00, 'Fundamentos de algoritmos e estruturas de dados.'),
-(2, 'ES201', 'Engenharia de Requisitos', 2, 3.00, 'Técnicas de levantamento e gerenciamento de requisitos de software.'),
-(3, 'ADS301', 'Banco de Dados', 3, 4.00, 'Modelagem, projeto e implementação de bancos de dados relacionais.'),
-(4, 'PSI101', 'Psicologia Cognitiva', 1, 3.00, NULL),
-(5, 'IA', 'Inteligência Artificial', NULL, 3.00, NULL),
-(6, 'EP01', 'Execução de Projetos', NULL, 3.00, NULL);
+(8, 'LPII', 'Linguagens de Programacao II', NULL, 3.00, NULL),
+(9, 'ED', 'Estrutura de Dados', NULL, 3.00, NULL);
 
 -- --------------------------------------------------------
 
@@ -247,27 +169,10 @@ CREATE TABLE `enrollments` (
 --
 
 INSERT INTO `enrollments` (`id_enrollments`, `student_id`, `class_id`, `enrolled_at`, `status`) VALUES
-(1, 4, 1, '2025-10-07 19:53:01', 'matriculado'),
-(2, 4, 2, '2025-10-07 19:53:01', 'matriculado'),
-(3, 5, 1, '2025-10-07 19:53:01', 'matriculado'),
-(4, 6, 2, '2025-10-07 19:53:01', 'matriculado'),
-(5, 7, 3, '2025-10-07 19:53:01', 'matriculado'),
-(6, 4, 3, '2025-10-07 21:25:03', 'matriculado'),
-(7, 5, 3, '2025-10-07 21:25:03', 'matriculado'),
-(8, 6, 3, '2025-10-07 21:25:03', 'matriculado'),
-(9, 8, 3, '2025-10-07 21:25:03', 'matriculado'),
-(10, 12, 3, '2025-10-07 21:25:03', 'matriculado'),
-(11, 4, 4, '2025-10-07 21:26:27', 'matriculado'),
-(12, 12, 5, '2025-10-08 14:14:07', 'matriculado'),
-(13, 7, 5, '2025-10-08 14:14:08', 'matriculado'),
-(14, 4, 5, '2025-10-08 14:14:09', 'matriculado'),
-(15, 6, 5, '2025-10-08 14:14:09', 'matriculado'),
-(16, 8, 5, '2025-10-08 14:14:09', 'matriculado'),
-(17, 5, 5, '2025-10-08 14:14:10', 'matriculado'),
-(19, 4, 6, '2025-10-29 14:04:29', 'matriculado'),
-(20, 15, 6, '2025-10-29 14:04:32', 'matriculado'),
-(21, 7, 6, '2025-10-29 14:04:36', 'matriculado'),
-(22, 6, 6, '2025-10-29 14:04:37', 'matriculado');
+(24, 24, 9, '2025-11-19 12:04:49', 'matriculado'),
+(25, 22, 9, '2025-11-19 12:04:50', 'matriculado'),
+(26, 24, 8, '2025-11-19 12:04:53', 'matriculado'),
+(27, 22, 8, '2025-11-19 12:04:54', 'matriculado');
 
 -- --------------------------------------------------------
 
@@ -290,15 +195,10 @@ CREATE TABLE `grades` (
 --
 
 INSERT INTO `grades` (`id_grades`, `grade_item_id`, `student_id`, `score`, `feedback`, `graded_at`, `graded_by`) VALUES
-(1, 1, 4, 8.50, NULL, NULL, 2),
-(2, 2, 4, 9.50, NULL, NULL, 2),
-(3, 1, 5, 7.00, NULL, NULL, 2),
-(4, 4, 7, 10.00, NULL, NULL, 13),
-(5, 6, 7, 1.00, 'muito buxa', NULL, 13),
-(6, 8, 15, 7.60, 'Bom', NULL, 13),
-(7, 8, 4, 8.20, '', NULL, 13),
-(8, 8, 7, 4.30, '', NULL, 13),
-(9, 8, 6, 10.00, '', NULL, 13);
+(10, 9, 24, 10.00, 'Muito Bom', NULL, 23),
+(11, 9, 22, 10.00, 'Muito Bom', NULL, 23),
+(12, 10, 24, 10.00, 'Muito Bom', NULL, 23),
+(13, 10, 22, 10.00, 'Muito Bom', NULL, 23);
 
 -- --------------------------------------------------------
 
@@ -320,14 +220,8 @@ CREATE TABLE `grade_items` (
 --
 
 INSERT INTO `grade_items` (`id_grade_items`, `class_id`, `title`, `weight`, `due_date`, `max_score`) VALUES
-(1, 1, 'Prova 1', 0.40, NULL, 10.00),
-(2, 1, 'Trabalho 1', 0.30, NULL, 10.00),
-(3, 1, 'Prova 2', 0.30, NULL, 10.00),
-(4, 3, 'Prova Final - Banco de Dados', 0.60, NULL, 10.00),
-(5, 3, 'Projeto Prático - Banco de Dados', 0.40, NULL, 10.00),
-(6, 3, 'Prova 1', 0.40, NULL, 10.00),
-(7, 3, 'Prova 2', 0.20, NULL, 10.00),
-(8, 6, 'Prova 1', 0.20, NULL, 10.00);
+(9, 8, 'Prova 1', 0.50, NULL, 10.00),
+(10, 9, 'Prova 1', 0.50, NULL, 10.00);
 
 -- --------------------------------------------------------
 
@@ -351,14 +245,8 @@ CREATE TABLE `lessons` (
 --
 
 INSERT INTO `lessons` (`id_lessons`, `class_id`, `classroom_id`, `professor_id`, `lesson_date`, `duration_minutes`, `topic`, `created_at`) VALUES
-(1, 1, 1, 2, '2025-09-02 19:00:00', 90, 'Introdução a Algoritmos', '2025-10-07 18:50:11'),
-(2, 1, 1, 2, '2025-09-09 19:00:00', 90, 'Estruturas de Repetição', '2025-10-07 18:50:11'),
-(3, 2, 2, 3, '2025-09-03 21:00:00', 90, 'O que é um requisito?', '2025-10-07 18:50:11'),
-(4, 3, 1, 2, '2025-09-04 19:00:00', 120, 'Modelagem Entidade-Relacionamento', '2025-10-07 18:50:11'),
-(5, 3, 2, 13, '2025-10-08 19:00:00', 90, 'Consultas SQL Avançadas', '2025-10-07 20:45:30'),
-(6, 3, NULL, 13, '2025-10-07 17:51:24', 60, 'consulta sql', '2025-10-07 20:51:24'),
-(7, 3, NULL, 13, '2025-10-07 18:25:17', 60, 'revisão pra prova', '2025-10-07 21:25:17'),
-(8, 6, NULL, 13, '2025-10-29 11:09:32', 60, 'Revisão da Prova', '2025-10-29 14:09:32');
+(9, 8, NULL, 23, '2025-11-19 09:05:22', 60, 'Aula 1', '2025-11-19 12:05:22'),
+(10, 9, NULL, 23, '2025-11-19 09:05:24', 60, 'Aula 1', '2025-11-19 12:05:24');
 
 -- --------------------------------------------------------
 
@@ -372,15 +260,6 @@ CREATE TABLE `programs` (
   `name` varchar(150) NOT NULL,
   `description` text DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
-
---
--- Despejando dados para a tabela `programs`
---
-
-INSERT INTO `programs` (`id_programs`, `code`, `name`, `description`) VALUES
-(1, 'CC', 'Ciência da Computação', 'Curso focado em fundamentos da computação, algoritmos e desenvolvimento de software.'),
-(2, 'ES', 'Engenharia de Software', 'Curso com foco em processos de desenvolvimento, qualidade e gerenciamento de projetos de software.'),
-(3, 'ADS', 'Análise e Desenvolvimento de Sistemas', 'Curso tecnológico voltado para a criação de sistemas para o mercado.');
 
 -- --------------------------------------------------------
 
@@ -442,13 +321,6 @@ CREATE TABLE `submissions` (
   `feedback` text DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
---
--- Despejando dados para a tabela `submissions`
---
-
-INSERT INTO `submissions` (`idsubmissions`, `assignment_id`, `student_id`, `submitted_at`, `file_path`, `file_name`, `grade`, `feedback`) VALUES
-(1, 2, 4, '2025-10-08 14:41:41', 'uploads/academo_database_model_cropped.pdf', 'academo_database_model_cropped.pdf', NULL, NULL);
-
 -- --------------------------------------------------------
 
 --
@@ -462,6 +334,8 @@ CREATE TABLE `users` (
   `name` varchar(150) NOT NULL,
   `email` varchar(150) NOT NULL,
   `role_id` int(11) NOT NULL,
+  `owner_id` int(11) DEFAULT NULL,
+  `program_id` int(11) DEFAULT NULL,
   `status` enum('ativo','inativo') NOT NULL DEFAULT 'ativo',
   `created_at` timestamp NOT NULL DEFAULT current_timestamp(),
   `updated_at` timestamp NOT NULL DEFAULT current_timestamp() ON UPDATE current_timestamp()
@@ -471,20 +345,13 @@ CREATE TABLE `users` (
 -- Despejando dados para a tabela `users`
 --
 
-INSERT INTO `users` (`id_users`, `login`, `password_hash`, `name`, `email`, `role_id`, `status`, `created_at`, `updated_at`) VALUES
-(1, 'admin', '$2y$10$d/2zTS.AMR15wfR5oTLb5ObYb/5n02xFShS5Pn6R.cdVNejo5wiRW', 'Admin do Sistema', 'admin@academo.com', 1, 'ativo', '2025-10-07 18:50:11', '2025-10-07 19:46:32'),
-(2, 'prof.xavier', '$2y$10$d/2zTS.AMR15wfR5oTLb5ObYb/5n02xFShS5Pn6R.cdVNejo5wiRW', 'Charles Xavier', 'charles.x@academo.com', 2, 'ativo', '2025-10-07 18:50:11', '2025-10-07 19:46:32'),
-(3, 'prof.logan', '$2y$10$d/2zTS.AMR15wfR5oTLb5ObYb/5n02xFShS5Pn6R.cdVNejo5wiRW', 'James \"Logan\" Howlett', 'logan.h@academo.com', 2, 'ativo', '2025-10-07 18:50:11', '2025-10-07 19:46:32'),
-(4, 'jean.grey', '$2y$10$d/2zTS.AMR15wfR5oTLb5ObYb/5n02xFShS5Pn6R.cdVNejo5wiRW', 'Jean Grey', 'jean.g@academo.com', 3, 'ativo', '2025-10-07 18:50:11', '2025-10-07 19:46:32'),
-(5, 'scott.summers', '$2y$10$d/2zTS.AMR15wfR5oTLb5ObYb/5n02xFShS5Pn6R.cdVNejo5wiRW', 'Scott Summers', 'scott.s@academo.com', 3, 'ativo', '2025-10-07 18:50:11', '2025-10-07 19:46:32'),
-(6, 'ororo.munroe', '$2y$10$d/2zTS.AMR15wfR5oTLb5ObYb/5n02xFShS5Pn6R.cdVNejo5wiRW', 'Ororo Munroe', 'ororo.m@academo.com', 3, 'ativo', '2025-10-07 18:50:11', '2025-10-07 19:46:32'),
-(7, 'kurt.wagner', '$2y$10$d/2zTS.AMR15wfR5oTLb5ObYb/5n02xFShS5Pn6R.cdVNejo5wiRW', 'Kurt Wagner', 'kurt.w@academo.com', 3, 'ativo', '2025-10-07 18:50:11', '2025-10-07 19:46:32'),
-(8, 'gregory.schafer', '$2y$10$y1HW6KwbOG5fKpUiZsGnyOACGM/FP/ySxYDKXkLFNCQH6yMELJ/i6', 'Oscar Schafer', 'gregory.ishigami@gmail.com', 3, 'ativo', '2025-10-07 20:02:27', '2025-10-07 20:02:27'),
-(11, 'gabriel.hausmann', '$2y$10$bo600AvguWZXNHcWqnh6b.I6X8i9eattE56pmcdxssbVKMEKTEcKW', 'Gabriel Hausmann', 'gabriel.hausmann@gmail.com', 4, 'ativo', '2025-10-07 20:24:09', '2025-10-07 20:24:09'),
-(12, 'bernardo.21', '$2y$10$lL.TYgS7w/a.Vs3h17r2auvMcxiqHDBiQX1XgdF9VezzmLS3lYFJK', 'Bernardo Amaral', 'bernardo@gmail.com', 3, 'ativo', '2025-10-07 20:24:46', '2025-10-07 20:24:46'),
-(13, 'pedro.21', '$2y$10$gMKXsnuepySSUXJJexUSVOySxs3abpEjRh.ayrat5Se/Y39G6zkBy', 'Pedro', 'pedro@gmail.com', 2, 'ativo', '2025-10-07 20:26:08', '2025-10-07 20:26:08'),
-(14, 'prof.frost', '$2y$10$d/2zTS.AMR15wfR5oTLb5ObYb/5n02xFShS5Pn6R.cdVNejo5wiRW', 'Emma Frost', 'emma.f@academo.com', 2, 'ativo', '2025-10-07 21:26:27', '2025-10-07 21:26:27'),
-(15, 'felipe.2', '$2y$10$Hbt4oHpsSdFskgcjn9K0WOiEeyRK7qXKelQDZ6.7snCFWQpkbsaHq', 'Felipe', 'felipe.2@gmail.com', 3, 'ativo', '2025-10-29 14:01:44', '2025-10-29 14:02:13');
+INSERT INTO `users` (`id_users`, `login`, `password_hash`, `name`, `email`, `role_id`, `owner_id`, `program_id`, `status`, `created_at`, `updated_at`) VALUES
+(1, 'admin', '$2y$10$d/2zTS.AMR15wfR5oTLb5ObYb/5n02xFShS5Pn6R.cdVNejo5wiRW', 'Admin do Sistema', 'admin@academo.com', 1, NULL, NULL, 'ativo', '2025-10-07 21:50:11', '2025-10-07 22:46:32'),
+(21, 'fatec.rc', '$2y$10$wjY6YEwgrkFhF7hvhF2SButYpg68BHLV3c5U06a7dtdEW90d8hvTG', 'Fatec Prof. Álvares Gracioli', 'fatec.rc@gmail.com', 4, NULL, NULL, 'ativo', '2025-11-19 11:59:43', '2025-11-19 11:59:43'),
+(22, 'nathan.scremin', '$2y$10$PoO5KKZcUWKQavLJGyvbsOxP6EoTKl8IdE1v/jmQr3V4Zo5l1WekS', 'Nathan Scremin', 'nathan.scremin175@gmail.com', 3, 21, NULL, 'ativo', '2025-11-19 12:00:22', '2025-11-19 12:01:43'),
+(23, 'orlando.saraiva', '$2y$10$1In01uNy2YCDmdfnR18FS.eFhZgKHtjZ.T55EpeRO.qkbaX67pbpi', 'Orlando Saraiva Jr', 'orlando.saraiva@gmail.com', 2, 21, NULL, 'ativo', '2025-11-19 12:01:04', '2025-11-19 12:01:04'),
+(24, 'gabriel.nanetti', '$2y$10$YPSXMkI4vrKhELorjU0vFeuzGvt6f5CLqcYY5ig9gxRhgayaxugMa', 'Gabriel Vinicios Nanetti', 'gabriel.nanetti@gmail.com', 3, 21, NULL, 'ativo', '2025-11-19 12:01:37', '2025-11-19 12:01:37'),
+(25, 'fatec.tt', '$2y$10$Nu4gwRg/B9FKMJLpPndW5eKqtuxQSyBeI1vO4zjfZ//7nj7GLEEEq', 'Fatec Tatuapé \"Victor Civita\"', 'fatec.tt@gmail.com', 4, NULL, NULL, 'ativo', '2025-11-19 12:08:34', '2025-11-19 12:08:34');
 
 --
 -- Índices para tabelas despejadas
@@ -608,7 +475,8 @@ ALTER TABLE `users`
   ADD PRIMARY KEY (`id_users`),
   ADD UNIQUE KEY `login_UNIQUE` (`login`),
   ADD UNIQUE KEY `email_UNIQUE` (`email`),
-  ADD KEY `id_roles_idx` (`role_id`);
+  ADD KEY `id_roles_idx` (`role_id`),
+  ADD KEY `fk_users_program` (`program_id`);
 
 --
 -- AUTO_INCREMENT para tabelas despejadas
@@ -624,7 +492,7 @@ ALTER TABLE `assignments`
 -- AUTO_INCREMENT de tabela `attendance`
 --
 ALTER TABLE `attendance`
-  MODIFY `id_attendance` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=58;
+  MODIFY `id_attendance` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=70;
 
 --
 -- AUTO_INCREMENT de tabela `audit_logs`
@@ -636,7 +504,7 @@ ALTER TABLE `audit_logs`
 -- AUTO_INCREMENT de tabela `classes`
 --
 ALTER TABLE `classes`
-  MODIFY `id_classes` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=7;
+  MODIFY `id_classes` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=10;
 
 --
 -- AUTO_INCREMENT de tabela `classrooms`
@@ -648,31 +516,31 @@ ALTER TABLE `classrooms`
 -- AUTO_INCREMENT de tabela `disciplines`
 --
 ALTER TABLE `disciplines`
-  MODIFY `id_disciplines` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=7;
+  MODIFY `id_disciplines` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=10;
 
 --
 -- AUTO_INCREMENT de tabela `enrollments`
 --
 ALTER TABLE `enrollments`
-  MODIFY `id_enrollments` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=23;
+  MODIFY `id_enrollments` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=28;
 
 --
 -- AUTO_INCREMENT de tabela `grades`
 --
 ALTER TABLE `grades`
-  MODIFY `id_grades` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=10;
+  MODIFY `id_grades` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=14;
 
 --
 -- AUTO_INCREMENT de tabela `grade_items`
 --
 ALTER TABLE `grade_items`
-  MODIFY `id_grade_items` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=9;
+  MODIFY `id_grade_items` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=11;
 
 --
 -- AUTO_INCREMENT de tabela `lessons`
 --
 ALTER TABLE `lessons`
-  MODIFY `id_lessons` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=9;
+  MODIFY `id_lessons` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=11;
 
 --
 -- AUTO_INCREMENT de tabela `programs`
@@ -702,7 +570,7 @@ ALTER TABLE `submissions`
 -- AUTO_INCREMENT de tabela `users`
 --
 ALTER TABLE `users`
-  MODIFY `id_users` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=16;
+  MODIFY `id_users` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=26;
 
 --
 -- Restrições para tabelas despejadas
@@ -783,6 +651,7 @@ ALTER TABLE `submissions`
 -- Restrições para tabelas `users`
 --
 ALTER TABLE `users`
+  ADD CONSTRAINT `fk_users_program` FOREIGN KEY (`program_id`) REFERENCES `programs` (`id_programs`) ON DELETE SET NULL,
   ADD CONSTRAINT `id_roles` FOREIGN KEY (`role_id`) REFERENCES `roles` (`id_roles`) ON UPDATE CASCADE;
 COMMIT;
 

@@ -2,8 +2,8 @@
 require_once __DIR__ . '/../db.php';
 $erro = '';
 $sucesso = '';
+$owner_id = $_SESSION['usuario_id']; // O ID do coordenador logado
 
-// Lógica de cadastro movida para o topo do arquivo que a utiliza
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['cadastrar_usuario'])) {
     $login = trim($_POST['login'] ?? '');
     $name  = trim($_POST['name'] ?? '');
@@ -21,10 +21,13 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['cadastrar_usuario']))
             $erro = "Login ou email já cadastrado.";
         } else {
             $hash = password_hash($senha, PASSWORD_DEFAULT);
-            $stmt_insert = $conn->prepare("INSERT INTO users (login, password_hash, name, email, role_id) VALUES (?, ?, ?, ?, ?)");
-            $stmt_insert->bind_param("ssssi", $login, $hash, $name, $email, $role_id);
+            
+            // MUDANÇA AQUI: Inserimos o owner_id
+            $stmt_insert = $conn->prepare("INSERT INTO users (login, password_hash, name, email, role_id, owner_id) VALUES (?, ?, ?, ?, ?, ?)");
+            $stmt_insert->bind_param("ssssii", $login, $hash, $name, $email, $role_id, $owner_id);
+            
             if ($stmt_insert->execute()) {
-                $sucesso = "Usuário cadastrado com sucesso!";
+                $sucesso = "Usuário cadastrado e vinculado à sua coordenação!";
             } else {
                 $erro = "Erro ao cadastrar usuário: " . $stmt_insert->error;
             }
@@ -43,19 +46,19 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['cadastrar_usuario']))
     
     <form method="post" action="?page=cadastrar_usuario">
         <label for="name">Nome Completo:</label>
-        <input type="text" id="name" name="name" required style="width:100%; padding: 8px;">
+        <input type="text" id="name" name="name" required>
         
         <label for="login">Login:</label>
-        <input type="text" id="login" name="login" required style="width:100%; padding: 8px;">
+        <input type="text" id="login" name="login" required>
         
         <label for="email">Email:</label>
-        <input type="email" id="email" name="email" required style="width:100%; padding: 8px;">
+        <input type="email" id="email" name="email" required>
         
         <label for="senha">Senha:</label>
-        <input type="password" id="senha" name="senha" required style="width:100%; padding: 8px;">
+        <input type="password" id="senha" name="senha" required>
         
         <label for="role_id">Tipo de Usuário:</label>
-        <select id="role_id" name="role_id" required style="width:100%; padding: 8px;">
+        <select id="role_id" name="role_id" required>
             <option value="">Selecione...</option>
             <option value="3">Aluno</option>
             <option value="2">Professor</option>
