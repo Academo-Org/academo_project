@@ -156,7 +156,7 @@ $page = $_GET['page'] ?? 'inicio';
     #academo-chat-button:hover {
       transform: scale(1.1);
     }
-    
+    /*Tamanho do chat */
     #chat-container {
       position: fixed;
       bottom: 100px;
